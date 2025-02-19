@@ -33,7 +33,7 @@ class BeritaController extends Controller
         }
 
         // Kembalikan data ke view
-        return view('berita', compact('beritas'));
+        return view('berita.berita', compact('beritas'));
     }
 
 
@@ -42,7 +42,7 @@ class BeritaController extends Controller
      */
     public function create()
     {
-        //
+        return view('berita.create');
     }
 
     /**
@@ -50,16 +50,77 @@ class BeritaController extends Controller
      */
     public function store(Request $request)
     {
-        // 
+        // Validasi input
+        $request->validate([
+            'Judul'  => 'required|string|max:100|unique:beritas,Judul',
+            'Isi'    => 'required|string',
+            'author_id' => 'required|exists:users,id',
+            'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image5' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $imageNames = [];
+
+        // Simpan gambar dengan nama unik
+        for ($i = 1; $i <= 5; $i++) {
+            $imageField = 'image' . $i;
+            if ($request->hasFile($imageField)) {
+                $file = $request->file($imageField);
+                $fileName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('uploads/berita', $fileName, 'public');
+
+                $imageNames[$imageField] = $fileName;
+            }
+        }
+
+        // Kirim data ke API
+        try {
+            $response = Http::post('http://sgb-backpanel.test/api/berita', [
+                'image1' => $imageNames['image1'] ?? null,
+                'image2' => $imageNames['image2'] ?? null,
+                'image3' => $imageNames['image3'] ?? null,
+                'image4' => $imageNames['image4'] ?? null,
+                'image5' => $imageNames['image5'] ?? null,
+                'Judul'  => $request->Judul,
+                'Isi'    => $request->Isi,
+                'author_id' => $request->author_id,
+            ]);
+
+            if ($response->successful()) {
+                return redirect()->route('berita.berita')->with('success', 'Berita berhasil ditambahkan!');
+            }
+
+            throw new \Exception('Gagal menghubungi API.');
+        } catch (\Exception $e) {
+            return redirect()->route('berita.create')->with('error', 'Gagal menambahkan berita! ' . $e->getMessage());
+        }
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, $judul)
     {
-        //
+        // Encode judul agar sesuai dengan format URL
+        $encodedJudul = urlencode($judul);
+
+        // Panggil API detail berita berdasarkan jdID
+        $response = Http::get("http://sgb-backpanel.test/api/berita/detail?jdID={$encodedJudul}");
+
+        if ($response->successful()) {
+            $berita = $response->json(); // Ambil data JSON dari API
+        } else {
+            $berita = null; // Jika gagal, set null
+        }
+
+        // Kembalikan data ke view detail berita
+        return view('berita.detail', compact('berita'));
     }
+
 
     /**
      * Show the form for editing the specified resource.

@@ -3,7 +3,7 @@
 @section('main-content')
 <!-- Page Heading -->
 <div class="d-flex align-items-center mb-4">
-    <a href="/" class="text-dark h3 mr-3" aria-label="Close">&times;</a>
+    <a href="{{route('berita.berita')}}" class="text-dark h3 mr-3" aria-label="Close">&times;</a>
     <span class="h3 text-gray-800">{{ __('Profile') }}</span>
 </div>
 

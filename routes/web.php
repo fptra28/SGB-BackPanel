@@ -25,7 +25,13 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 
 // Berita Page Routes
-Route::get('/berita', 'BeritaController@index')->name('berita');
+Route::get('/berita', 'BeritaController@index')->name('berita.berita');
+
+Route::post('/berita', 'BeritaController@store')->name('berita.store');
+
+Route::get('/berita/create', 'BeritaController@create')->name('berita.create');
+
+Route::get('/berita/{judul}', 'BeritaController@show')->name('berita.detail');
 
 // Profile Routes
 Route::get('/profile', 'ProfileController@index', function () {

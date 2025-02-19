@@ -62,15 +62,10 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Berita</div>
                         <div class="row no-gutters align-items-center">
                             <div class="col-auto">
-                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                            </div>
-                            <div class="col">
-                                <div class="progress progress-sm mr-2">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 50%"
-                                        aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ $widget['berita'] }} Berita
                                 </div>
                             </div>
                         </div>
@@ -90,7 +85,9 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">{{ __('Users') }}</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $widget['users'] }}</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ $widget['users'] }} {{ $widget['users'] == 1 ? 'User' : 'Users' }}
+                        </div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-users fa-2x text-gray-300"></i>

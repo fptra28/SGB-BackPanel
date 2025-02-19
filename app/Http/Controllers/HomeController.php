@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Berita;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -25,10 +26,11 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::count();
+        $berita = Berita::count();
 
         $widget = [
             'users' => $users,
-            //...
+            'berita' => $berita
         ];
 
         return view('home', compact('widget'));

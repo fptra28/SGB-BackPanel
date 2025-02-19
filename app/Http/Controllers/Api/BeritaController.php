@@ -4,48 +4,82 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Berita;
 
 class BeritaController extends Controller
 {
-    // app/Http/Controllers/Api/BeritaController.php
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['store', 'update', 'destroy']);
+    }
+    // Ambil semua berita
     public function index()
     {
-        // Ambil data berita dan penulisnya
         $beritas = Berita::with('author')->latest()->get();
-
-        // Kembalikan data dalam bentuk JSON
         return response()->json($beritas);
     }
-    public function create()
+
+    // Ambil berita berdasarkan judul (jdID)
+    public function showByTitle(Request $request)
     {
-        //
+        $judul = $request->query('jdID'); // Ambil parameter dari URL
+
+        if (!$judul) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parameter jdID diperlukan'
+            ], 400);
+        }
+
+        // Cari berita berdasarkan judul
+        $berita = Berita::with('author')
+            ->where('Judul', $judul)
+            ->first();
+
+        if (!$berita) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Berita tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $berita
+        ]);
     }
+
+    // Tambah berita baru
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
-            'Judul' => 'required|max:100',
-            'Isi' => 'required',
-            'image1' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'image2' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'image3' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'image4' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'image5' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'image1' => 'required|string',
+            'image2' => 'required|string',
+            'image3' => 'required|string',
+            'image4' => 'required|string',
+            'image5' => 'required|string',
+            'Judul'  => 'required|string|max:100|unique:beritas,Judul',
+            'Isi'    => 'required|string',
+            'author_id' => 'required|exists:users,id', // Pastikan author_id ada di tabel users
         ]);
 
-        Berita::create([
-            'image1' => $request->file('image1')->store('uploads', 'public'),
-            'image2' => $request->file('image2')->store('uploads', 'public'),
-            'image3' => $request->file('image3')->store('uploads', 'public'),
-            'image4' => $request->file('image4')->store('uploads', 'public'),
-            'image5' => $request->file('image5')->store('uploads', 'public'),
-            'Judul' => $request->Judul,
-            'Isi' => $request->Isi,
-            'author_id' => Auth::id(), // Ganti auth()->id() dengan Auth::id()
+        // Simpan data ke database
+        $berita = Berita::create([
+            'image1' => $request->image1,
+            'image2' => $request->image2,
+            'image3' => $request->image3,
+            'image4' => $request->image4,
+            'image5' => $request->image5,
+            'Judul'  => $request->Judul,
+            'Isi'    => $request->Isi,
+            'author_id' => $request->author_id,
         ]);
 
-
-        return redirect()->route('berita.index')->with('success', 'Berita berhasil ditambahkan.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Berita berhasil ditambahkan!',
+            'data'    => $berita
+        ], 201);
     }
 }

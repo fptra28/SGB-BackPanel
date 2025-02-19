@@ -18,4 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/berita', 'Api\BeritaController@index');
+Route::get('/berita', 'Api\BeritaController@index'); // Semua berita
+
+Route::get('/berita/detail', 'Api\BeritaController@showByTitle'); // Detail berdasarkan judul (jdID)
+
+Route::post('/berita', 'Api\BeritaController@store');
