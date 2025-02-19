@@ -18,10 +18,16 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+// Authentification routes
 Auth::routes();
 
+// Home Page Routes
 Route::get('/', 'HomeController@index')->name('home');
 
+// Berita Page Routes
+Route::get('/berita', 'BeritaController@index')->name('berita');
+
+// Profile Routes
 Route::get('/profile', 'ProfileController@index', function () {
     return view('profile', ['title' => 'Profile']);
 })->name('profile');

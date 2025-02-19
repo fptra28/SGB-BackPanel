@@ -7,8 +7,8 @@
             <div class="card o-hidden border-0 shadow-lg my-5">
                 <div class="card-body p-0">
                     <div class="row">
-                        <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center bg-primary">
-                            <img src="{{ asset('img/NewsMaker-23-logo-white.png') }}" alt="Logo" class="img-fluid"
+                        <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center bg-dark">
+                            <img src="{{ asset('img/LOGO-SGB-Mini-Account.png') }}" alt="Logo" class="img-fluid"
                                 style="max-width: 80%; height: auto;">
                         </div>
                         <div class="col-lg-6">
@@ -60,8 +60,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            {{ __('Login') }}
+                                        <button type="submit" class="btn btn-dark btn-user btn-block">
+                                            {{ __('LOGIN') }}
                                         </button>
                                     </div>
                                 </form>
