@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Http;
 
 class BeritaController extends Controller
 {
+
+    private $baseUrl;
+
     /**
      * Create a new controller instance.
      *
@@ -15,6 +18,7 @@ class BeritaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->baseUrl = config('app.url'); // Ambil dari .env
     }
 
     /**
@@ -23,7 +27,7 @@ class BeritaController extends Controller
     public function index()
     {
         // Mengambil data dari API menggunakan HTTP client
-        $response = Http::get('http://sgb-backpanel.test/api/berita');
+        $response = Http::get("{$this->baseUrl}/api/berita");
 
         // Jika request API sukses
         if ($response->successful()) {
@@ -50,6 +54,8 @@ class BeritaController extends Controller
      */
     public function store(Request $request)
     {
+        $baseUrl = config('app.url');
+
         // Validasi input
         $request->validate([
             'Judul'  => 'required|string|max:100|unique:beritas,Judul',
@@ -78,7 +84,7 @@ class BeritaController extends Controller
 
         // Kirim data ke API
         try {
-            $response = Http::post('http://sgb-backpanel.test/api/berita', [
+            $response = Http::post('{$this->baseUrl}/api/berita', [
                 'image1' => $imageNames['image1'] ?? null,
                 'image2' => $imageNames['image2'] ?? null,
                 'image3' => $imageNames['image3'] ?? null,
@@ -108,7 +114,7 @@ class BeritaController extends Controller
         $encodedJudul = urlencode($judul);
 
         // Panggil API detail berita berdasarkan jdID
-        $response = Http::get("http://sgb-backpanel.test/api/berita/detail?jdID={$encodedJudul}");
+        $response = Http::get("{$this->baseUrl}/api/berita/detail?jdID={$encodedJudul}");
 
         if ($response->successful()) {
             $berita = $response->json(); // Ambil data JSON dari API
@@ -125,7 +131,7 @@ class BeritaController extends Controller
      */
     public function edit($id)
     {
-        $response = Http::get("http://sgb-backpanel.test/api/berita/edit?id={$id}");
+        $response = Http::get("{$this->baseUrl}/api/berita/edit?id={$id}");
 
         if ($response->failed()) {
             abort(404, 'Berita tidak ditemukan');
@@ -170,7 +176,7 @@ class BeritaController extends Controller
 
         // Kirim data ke API
         try {
-            $response = Http::put("http://sgb-backpanel.test/api/berita/edit/{$id}", array_merge([
+            $response = Http::put("{$this->baseUrl}/api/berita/edit/{$id}", array_merge([
                 'Judul'  => $request->Judul,
                 'Isi'    => $request->Isi,
                 'author_id' => $request->author_id,
@@ -189,8 +195,14 @@ class BeritaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $response = Http::delete("{$this->baseUrl}/api/berita/delete/{$id}");
+
+        if ($response->successful()) {
+            return redirect()->route('berita.berita')->with('success', 'Berita berhasil dihapus!');
+        } else {
+            return redirect()->route('berita.berita')->with('error', 'Gagal menghapus berita!');
+        }
     }
 }

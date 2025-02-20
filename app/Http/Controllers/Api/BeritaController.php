@@ -8,10 +8,12 @@ use App\Models\Berita;
 
 class BeritaController extends Controller
 {
+    // Middleware yang harus login terlebih dahulu
     public function __construct()
     {
-        $this->middleware('auth')->only(['store', 'update', 'destroy']);
+        // $this->middleware('auth:sanctum')->only(['store', 'update', 'destroy']);
     }
+
     // Ambil semua berita
     public function index()
     {
@@ -135,6 +137,25 @@ class BeritaController extends Controller
             'success' => true,
             'message' => 'Berita berhasil diperbarui!',
             'data'    => $berita
+        ]);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $berita = Berita::find($id);
+
+        if (!$berita) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Berita tidak ditemukan'
+            ], 404);
+        }
+
+        $berita->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berita berhasil dihapus!'
         ]);
     }
 }

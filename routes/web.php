@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +24,10 @@ use Illuminate\Support\Facades\Route;
 // Authentification routes
 Auth::routes();
 
+// Route::middleware(['auth', EnsureFrontendRequestsAreStateful::class])->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
 // Home Page Routes
 Route::get('/', 'HomeController@index')->name('home');
 
@@ -33,9 +40,11 @@ Route::get('/berita/create', 'BeritaController@create')->name('berita.create');
 
 Route::get('/berita/edit/{id}', 'BeritaController@edit')->name('berita.edit');
 
-Route::put('/berita/edit/{id}', 'BeritaController@update')->name('berita.update');
+Route::put('/berita/edit/put/{id}', 'BeritaController@update')->name('berita.update');
 
 Route::get('/berita/detail/{judul}', 'BeritaController@show')->name('berita.detail');
+
+Route::delete('/berita/delete/{id}', 'BeritaController@destroy')->name('berita.destroy');
 
 // Profile Routes
 Route::get('/profile', 'ProfileController@index')->name('profile');
