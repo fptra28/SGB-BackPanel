@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 
-
 @section('main-content')
 <div class="mb-2 d-flex justify-content-between">
     <span class="h3 text-gray-800">{{ __('Daftar Berita') }}</span>
@@ -22,8 +21,8 @@
     @foreach ($beritas as $berita)
     <div class="col">
         <div class="card shadow h-100 d-flex flex-column">
-            <img src="{{ asset('storage/uploads/berita/' . $berita['image1']) }}" class="card-img-top" alt="Foto Card"
-                height="150" style="object-fit: cover">
+            <img src="{{ asset('storage/uploads/berita/' . $berita['image1']) }}" class="card-img-top"
+                alt="$berita['image1']" height="150" style="object-fit: cover">
             <div class="card-body d-flex flex-column flex-grow-1">
                 <h5 class="card-title font-weight-bold text-dark">
                     {{ Str::limit($berita['Judul'], 50) }}
@@ -46,7 +45,8 @@
                             class="btn btn-success text-dark w-100 mr-2">
                             Lihat
                         </a>
-                        <button class="btn btn-warning text-dark w-100 mr-2">Edit</button>
+                        <a href="{{ route('berita.edit', ['id' => $berita['id']]) }}"
+                            class="btn btn-warning text-dark w-100 mr-2">Edit</a>
                         <button class="btn btn-danger w-100">Hapus</button>
                     </div>
                 </div>

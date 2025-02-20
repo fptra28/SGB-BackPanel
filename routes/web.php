@@ -31,12 +31,14 @@ Route::post('/berita', 'BeritaController@store')->name('berita.store');
 
 Route::get('/berita/create', 'BeritaController@create')->name('berita.create');
 
-Route::get('/berita/{judul}', 'BeritaController@show')->name('berita.detail');
+Route::get('/berita/edit/{id}', 'BeritaController@edit')->name('berita.edit');
+
+Route::put('/berita/edit/{id}', 'BeritaController@update')->name('berita.update');
+
+Route::get('/berita/detail/{judul}', 'BeritaController@show')->name('berita.detail');
 
 // Profile Routes
-Route::get('/profile', 'ProfileController@index', function () {
-    return view('profile', ['title' => 'Profile']);
-})->name('profile');
+Route::get('/profile', 'ProfileController@index')->name('profile');
 
 Route::put('/profile', 'ProfileController@update')->name('profile.update');
 

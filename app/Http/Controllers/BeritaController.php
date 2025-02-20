@@ -99,7 +99,6 @@ class BeritaController extends Controller
         }
     }
 
-
     /**
      * Display the specified resource.
      */
@@ -121,21 +120,70 @@ class BeritaController extends Controller
         return view('berita.detail', compact('berita'));
     }
 
-
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $response = Http::get("http://sgb-backpanel.test/api/berita/edit?id={$id}");
+
+        if ($response->failed()) {
+            abort(404, 'Berita tidak ditemukan');
+        }
+
+        $berita = $response->json('data'); // Ambil langsung bagian 'data'
+
+        return view('berita.edit', compact('berita'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // Validasi input
+        $request->validate([
+            'Judul'  => 'required|string|max:100',
+            'Isi'    => 'required|string',
+            'author_id' => 'required|exists:users,id',
+            'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image5' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $imageNames = [];
+
+        // Simpan gambar jika ada yang diunggah
+        for ($i = 1; $i <= 5; $i++) {
+            $imageField = 'image' . $i;
+            if ($request->hasFile($imageField)) {
+                $file = $request->file($imageField);
+                $fileName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('uploads/berita', $fileName, 'public');
+
+                $imageNames[$imageField] = $fileName;
+            }
+        }
+
+        // Kirim data ke API
+        try {
+            $response = Http::put("http://sgb-backpanel.test/api/berita/edit/{$id}", array_merge([
+                'Judul'  => $request->Judul,
+                'Isi'    => $request->Isi,
+                'author_id' => $request->author_id,
+            ], $imageNames));
+
+            if ($response->successful()) {
+                return redirect()->route('berita.berita')->with('success', 'Berita berhasil diperbarui!');
+            }
+
+            throw new \Exception('Gagal menghubungi API.');
+        } catch (\Exception $e) {
+            return redirect()->route('berita.edit', ['id' => $id])->with('error', 'Gagal memperbarui berita! ' . $e->getMessage());
+        }
     }
 
     /**

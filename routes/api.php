@@ -22,4 +22,8 @@ Route::get('/berita', 'Api\BeritaController@index'); // Semua berita
 
 Route::get('/berita/detail', 'Api\BeritaController@showByTitle'); // Detail berdasarkan judul (jdID)
 
+Route::get('/berita/edit', 'Api\BeritaController@showById'); //
+
 Route::post('/berita', 'Api\BeritaController@store');
+
+Route::put('/berita/edit/{id}', 'Api\BeritaController@update');
