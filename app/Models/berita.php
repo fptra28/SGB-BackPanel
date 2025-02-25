@@ -13,10 +13,6 @@ class berita extends Model
 
     protected $fillable = [
         'image1',
-        'image2',
-        'image3',
-        'image4',
-        'image5',
         'Judul',
         'Isi',
         'author_id',

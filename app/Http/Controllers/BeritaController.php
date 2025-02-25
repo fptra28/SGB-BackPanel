@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\berita;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BeritaController extends Controller
 {
@@ -26,20 +30,42 @@ class BeritaController extends Controller
      */
     public function index()
     {
+        // Mengambil parameter pencarian dari request
+        $search = request()->query('search');
+
         // Mengambil data dari API menggunakan HTTP client
         $response = Http::get("{$this->baseUrl}/api/berita");
 
-        // Jika request API sukses
         if ($response->successful()) {
-            $beritas = $response->json(); // Mendapatkan data dalam format JSON
+            $data = $response->json();
+            $currentPage = request()->get('page', 1);
+            $perPage = 10;
+
+            // Konversi array ke Laravel Collection
+            $beritasCollection = collect($data);
+
+            // Filter berdasarkan pencarian (hanya pada Judul)
+            if (!empty($search)) {
+                $beritasCollection = $beritasCollection->filter(function ($item) use ($search) {
+                    return stripos($item['Judul'], $search) !== false;
+                });
+            }
+
+            // Lakukan pagination manual dengan Collection Laravel
+            $beritas = new LengthAwarePaginator(
+                $beritasCollection->forPage($currentPage, $perPage),
+                $beritasCollection->count(),
+                $perPage,
+                $currentPage,
+                ['path' => request()->url(), 'query' => request()->query()]
+            );
         } else {
-            $beritas = [];
+            $beritas = new LengthAwarePaginator([], 0, 10);
         }
 
         // Kembalikan data ke view
         return view('berita.berita', compact('beritas'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -54,56 +80,33 @@ class BeritaController extends Controller
      */
     public function store(Request $request)
     {
-        $baseUrl = config('app.url');
-
         // Validasi input
         $request->validate([
-            'Judul'  => 'required|string|max:100|unique:beritas,Judul',
-            'Isi'    => 'required|string',
+            'image1'    => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'Judul'     => 'required|string|max:100|unique:beritas,Judul',
+            'Isi'       => 'required|string',
             'author_id' => 'required|exists:users,id',
-            'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image5' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $imageNames = [];
-
-        // Simpan gambar dengan nama unik
-        for ($i = 1; $i <= 5; $i++) {
-            $imageField = 'image' . $i;
-            if ($request->hasFile($imageField)) {
-                $file = $request->file($imageField);
-                $fileName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('uploads/berita', $fileName, 'public');
-
-                $imageNames[$imageField] = $fileName;
-            }
-        }
-
-        // Kirim data ke API
         try {
-            $response = Http::post('{$this->baseUrl}/api/berita', [
-                'image1' => $imageNames['image1'] ?? null,
-                'image2' => $imageNames['image2'] ?? null,
-                'image3' => $imageNames['image3'] ?? null,
-                'image4' => $imageNames['image4'] ?? null,
-                'image5' => $imageNames['image5'] ?? null,
-                'Judul'  => $request->Judul,
-                'Isi'    => $request->Isi,
+            // Ambil nama asli file dan simpan ke dalam folder public/uploads/berita
+            $fileName = time() . '_' . $request->file('image1')->getClientOriginalName();
+            $request->file('image1')->storeAs('public/uploads', $fileName);
+
+            // Simpan data ke database dengan hanya nama file
+            $berita = Berita::create([
+                'image1'    => $fileName, // Hanya menyimpan nama file
+                'Judul'     => $request->Judul,
+                'Isi'       => $request->Isi,
                 'author_id' => $request->author_id,
             ]);
 
-            if ($response->successful()) {
-                return redirect()->route('berita.berita')->with('success', 'Berita berhasil ditambahkan!');
-            }
-
-            throw new \Exception('Gagal menghubungi API.');
+            return redirect()->route('berita.berita')->with('success', 'Berita berhasil ditambahkan!');
         } catch (\Exception $e) {
-            return redirect()->route('berita.create')->with('error', 'Gagal menambahkan berita! ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menambahkan berita! ' . $e->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -142,7 +145,6 @@ class BeritaController extends Controller
         return view('berita.edit', compact('berita'));
     }
 
-
     /**
      * Update the specified resource in storage.
      */
@@ -154,55 +156,65 @@ class BeritaController extends Controller
             'Isi'    => 'required|string',
             'author_id' => 'required|exists:users,id',
             'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image4' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image5' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $imageNames = [];
-
-        // Simpan gambar jika ada yang diunggah
-        for ($i = 1; $i <= 5; $i++) {
-            $imageField = 'image' . $i;
-            if ($request->hasFile($imageField)) {
-                $file = $request->file($imageField);
-                $fileName = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('uploads/berita', $fileName, 'public');
-
-                $imageNames[$imageField] = $fileName;
-            }
-        }
-
-        // Kirim data ke API
         try {
-            $response = Http::put("{$this->baseUrl}/api/berita/edit/{$id}", array_merge([
-                'Judul'  => $request->Judul,
-                'Isi'    => $request->Isi,
-                'author_id' => $request->author_id,
-            ], $imageNames));
+            // Ambil berita yang akan diupdate
+            $berita = Berita::findOrFail($id);
 
-            if ($response->successful()) {
-                return redirect()->route('berita.berita')->with('success', 'Berita berhasil diperbarui!');
+            // Simpan gambar jika ada yang diunggah
+            if ($request->hasFile('image1')) {
+                // Hapus gambar lama jika ada
+                if ($berita->image1 && file_exists(storage_path('app/public/uploads/' . $berita->image1))) {
+                    unlink(storage_path('app/public/uploads/' . $berita->image1));
+                }
+
+                // Simpan gambar baru dengan hanya nama file
+                $fileName = time() . '_' . $request->file('image1')->getClientOriginalName();
+                $request->file('image1')->storeAs('public/uploads', $fileName);
+            } else {
+                $fileName = $berita->image1; // Gunakan gambar lama jika tidak diubah
             }
 
-            throw new \Exception('Gagal menghubungi API.');
+            // Update berita di database
+            $berita->update([
+                'Judul'     => $request->Judul,
+                'Isi'       => $request->Isi,
+                'author_id' => $request->author_id,
+                'image1'    => $fileName, // Hanya menyimpan nama file
+            ]);
+
+            return redirect()->route('berita.berita')->with('success', 'Berita berhasil diperbarui!');
         } catch (\Exception $e) {
-            return redirect()->route('berita.edit', ['id' => $id])->with('error', 'Gagal memperbarui berita! ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memperbarui berita! ' . $e->getMessage());
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        $response = Http::delete("{$this->baseUrl}/api/berita/delete/{$id}");
+        $berita = Berita::find($id);
 
-        if ($response->successful()) {
-            return redirect()->route('berita.berita')->with('success', 'Berita berhasil dihapus!');
-        } else {
-            return redirect()->route('berita.berita')->with('error', 'Gagal menghapus berita!');
+        if (!$berita) {
+            return redirect()->route('berita.berita')->with('error', 'Berita tidak ditemukan.');
         }
+
+        // Cek apakah berita memiliki gambar
+        if ($berita->image1) {
+            $filePath = 'public/uploads/' . $berita->image1; // Sesuaikan dengan lokasi penyimpanan
+
+            // Hapus file jika ada di penyimpanan
+            if (Storage::exists($filePath)) {
+                Storage::delete($filePath);
+            }
+        }
+
+        // Hapus data berita dari database
+        $berita->delete();
+
+        return redirect()->route('berita.berita')->with('success', 'Berita dan gambarnya berhasil dihapus.');
     }
 }
