@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Berita;
+use App\Models\VideoLink;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -27,10 +28,12 @@ class HomeController extends Controller
     {
         $users = User::count();
         $berita = Berita::count();
+        $videos = VideoLink::count();
 
         $widget = [
             'users' => $users,
-            'berita' => $berita
+            'berita' => $berita,
+            'videos' => $videos
         ];
 
         return view('home', compact('widget'));

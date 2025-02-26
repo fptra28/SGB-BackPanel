@@ -28,14 +28,13 @@
                     <label class="font-weight-bolder" for="image1">Upload Gambar</label>
                     <input type="file" class="form-control @error('image1') is-invalid @enderror" id="image1"
                         name="image1" value="{{ old('Judul') }}">
-
                     @error('image1')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <!-- Judul Berita -->
-                <div class="form-group w-100 m-0">
+                <div class="form-group w-100 m-0 mt-2">
                     <label class="font-weight-bolder" for="Judul">Judul Berita</label>
                     <input type="text" class="form-control @error('Judul') is-invalid @enderror" id="Judul" name="Judul"
                         value="{{ old('Judul', optional($berita)['Judul']) }}" required>
@@ -47,7 +46,7 @@
         </div>
 
         <!-- Isi Berita -->
-        <div class="form-group mt-2">
+        <div class="form-group mt-3">
             <label class="font-weight-bolder" for="Isi">Isi Berita</label>
             <textarea class="form-control @error('Isi') is-invalid @enderror" id="Isi"
                 name="Isi">{{ old('Isi', optional($berita)['Isi']) }}</textarea>

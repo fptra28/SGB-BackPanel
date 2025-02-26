@@ -107,7 +107,6 @@ class BeritaController extends Controller
         }
     }
 
-
     /**
      * Display the specified resource.
      */
@@ -190,7 +189,6 @@ class BeritaController extends Controller
         }
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
@@ -215,6 +213,6 @@ class BeritaController extends Controller
         // Hapus data berita dari database
         $berita->delete();
 
-        return redirect()->route('berita.berita')->with('success', 'Berita dan gambarnya berhasil dihapus.');
+        return redirect()->route('berita.berita')->with('success', 'Berita berhasil dihapus.');
     }
 }

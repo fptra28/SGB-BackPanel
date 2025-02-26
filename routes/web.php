@@ -38,6 +38,19 @@ Route::get('/berita/detail/{judul}', 'BeritaController@show')->name('berita.deta
 
 Route::delete('/berita/delete/{id}', 'BeritaController@destroy')->name('berita.destroy');
 
+// Video Page Routes
+Route::get('/video', 'VideoController@index')->name('video.index');
+
+Route::post('/video', 'VideoController@store')->name('video.store');
+
+Route::get('/video/create', 'VideoController@create')->name('video.create');
+
+Route::get('/video/edit/{id}', 'VideoController@edit')->name('video.edit');
+
+Route::put('/video/edit/put/{id}', 'VideoController@update')->name('video.update');
+
+Route::delete('/video/delete/{id}', 'VideoController@destroy')->name('video.destroy');
+
 // Profile Routes
 Route::get('/profile', 'ProfileController@index')->name('profile');
 

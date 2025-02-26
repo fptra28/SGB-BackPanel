@@ -11,7 +11,7 @@ class BeritaController extends Controller
     // Ambil semua berita
     public function index()
     {
-        $beritas = Berita::with('author')->latest()->get();
+        $beritas = Berita::with(['author:id,name,last_name'])->latest()->get();
         return response()->json($beritas);
     }
 
@@ -28,7 +28,7 @@ class BeritaController extends Controller
         }
 
         // Cari berita berdasarkan judul
-        $berita = Berita::with('author')
+        $berita = Berita::with(['author:id,name,last_name'])
             ->where('Judul', $judul)
             ->first();
 
@@ -52,7 +52,7 @@ class BeritaController extends Controller
 
         abort_if(!is_numeric($id), 400, 'Parameter id harus berupa angka');
 
-        $berita = Berita::with('author')->find($id);
+        $berita = Berita::with(['author:id,name,last_name'])->find($id);
 
         if (!$berita) {
             return response()->json([

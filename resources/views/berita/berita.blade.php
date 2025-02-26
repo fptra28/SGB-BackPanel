@@ -77,6 +77,7 @@
                     <p class="card-text text-muted mb-1">
                         <i class="fas fa-user mr-2"></i>
                         {{ $berita['author']['name'] ?? 'Tidak ada penulis' }}
+                        {{ $berita['author']['last_name'] ?? 'Tidak ada penulis' }}
                     </p>
                     <p class="card-text">
                         <small class="text-muted">
@@ -121,7 +122,7 @@
 @else
 <!-- Tampilkan Pesan Jika Data Tidak Ditemukan -->
 <div class="alert alert-warning text-center mt-4">
-    <i class="fas fa-exclamation-triangle"></i> Data tidak ditemukan.
+    <i class="fas fa-exclamation-triangle mr-2"></i><span>Data berita tidak ditemukan.</span>
 </div>
 @endif
 

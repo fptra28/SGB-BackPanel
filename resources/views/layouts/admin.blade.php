@@ -67,10 +67,18 @@
             </div>
 
             <!-- Nav Item - News -->
-            <li class="nav-item {{ Nav::isRoute('berita') }}">
+            <li class="nav-item {{ Nav::isRoute('berita.*') }}">
                 <a class="nav-link" href="{{ route('berita.berita') }}">
                     <i class="fa-solid fa-newspaper"></i>
                     <span>{{ __('Berita') }}</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - News -->
+            <li class="nav-item {{ Nav::isRoute('video.*') }}">
+                <a class="nav-link" href="{{ route('video.index') }}">
+                    <i class="fa-solid fa-video"></i>
+                    <span>{{ __('Video') }}</span>
                 </a>
             </li>
 
@@ -158,7 +166,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Maintained by <a href="https://github.com/aleckrh" target="_blank">AleckRH</a>. {{
+                        <span>Maintained by SG Berjangka. &copy;{{
                             now()->year }}</span>
                     </div>
                 </div>
