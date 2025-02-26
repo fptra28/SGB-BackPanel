@@ -83,12 +83,12 @@
             </li>
 
             <!-- Nav Item - User -->
-            <li class="nav-item {{ Nav::isRoute('User') }}">
-                <a class="nav-link" href="">
+            {{-- <li class="nav-item {{ Nav::isRoute('user.*') }}">
+                <a class="nav-link" href="{{ route('user.index') }}">
                     <i class="fa-solid fa-users"></i>
                     <span>{{ __('User') }}</span>
                 </a>
-            </li>
+            </li> --}}
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">

@@ -56,6 +56,15 @@ Route::get('/profile', 'ProfileController@index')->name('profile');
 
 Route::put('/profile', 'ProfileController@update')->name('profile.update');
 
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
+// User Management Routes
+// Route::get('/users', 'UserController@index')->name('user.index');
+
+// Route::post('/users', 'UserController@store')->name('user.store');
+
+// Route::get('/users/create', 'UserController@create')->name('user.create');
+
+// Route::get('/users/edit/{id}', 'UserController@edit')->name('user.edit');
+
+// Route::put('/users/edit/put/{id}', 'UserController@update')->name('user.update');
+
+// Route::delete('/users/delete/{id}', 'UserController@destroy')->name('user.destroy');
