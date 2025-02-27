@@ -81,7 +81,7 @@
                     {{ \Carbon\Carbon::parse($video['created_at'] ?? now())->format('D, d F Y, h:i A') }}
                 </td>
                 <td class="text-center align-middle">
-                    {{ Str::limit($video['video_links'] ?? 'Judul tidak tersedia', 40) }}
+                    {{ Str::limit($video['video_links'] ?? 'Judul tidak tersedia', 30) }}
                 </td>
                 <td class="align-middle text-center">
                     <div class="d-flex flex-row w-100">
