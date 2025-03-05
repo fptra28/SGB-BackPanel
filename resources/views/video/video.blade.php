@@ -2,10 +2,22 @@
 
 @section('main-content')
 
-@if(session('success'))
-<div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> {{ session('success') }}</div>
-@elseif(session('error'))
-<div class="alert alert-danger"><i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}</div>
+@if (session('success'))
+<div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
+
+@if (session('error'))
+<div class="alert alert-danger border-left-danger alert-dismissible fade show" role="alert">
+    {{ session('error') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 @endif
 
 <div class="mb-2 d-flex justify-content-between align-items-center">
@@ -61,53 +73,69 @@
 </div>
 
 @if ($videos->count() > 0)
-<div class="table-responsive border rounded shadow-sm">
-    <table class="table table-hover table-bordered table-striped mb-0">
-        <thead class="thead-dark">
-            <tr>
-                <th class="text-center" style="width: 5%;">#</th>
-                <th class="text-center" style="width: 30%;">Judul</th>
-                <th class="text-center" style="width: 20%;">Tanggal Dibuat</th>
-                <th class="text-center">Link</th>
-                <th class="text-center">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($videos as $index => $video)
-            <tr>
-                <td class=" align-middle text-center">{{ $index + 1 }}</td>
-                <td class="align-middle">{{ Str::limit($video['title'] ?? 'Judul tidak tersedia', 60) }}</td>
-                <td class="align-middle text-center">
-                    {{ \Carbon\Carbon::parse($video['created_at'] ?? now())->format('D, d F Y, h:i A') }}
-                </td>
-                <td class="text-center align-middle">
-                    {{ Str::limit($video['video_links'] ?? 'Judul tidak tersedia', 30) }}
-                </td>
-                <td class="align-middle text-center">
-                    <div class="d-flex flex-row w-100">
-                        <a href="{{ $video['video_links'] }}" target="_blank" class="btn btn-success btn-sm mr-1 w-100">
-                            <i class="fas fa-external-link-alt"></i> Lihat
-                        </a>
-                        <a href="{{ route('video.edit', ['id' => $video['id'] ?? 0]) }}"
-                            class="btn btn-warning btn-sm w-100 mx-1 text-dark">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <form action="{{ route('video.destroy', ['id' => $video['id']]) }}" method="POST"
-                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus video ini?');"
-                            class="w-100 ml-1">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm w-100">
-                                <i class="fas fa-trash-alt"></i> Hapus
-                            </button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+
+<!-- Form Bulk Delete membungkus tabel -->
+<form action="{{ route('video.bulkDelete') }}" method="POST" id="bulkDeleteForm"
+    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data yang dipilih?');">
+    @csrf
+
+    <button type="submit" class="btn btn-danger mb-3" id="bulkDeleteBtn" disabled>
+        <i class="fas fa-trash-alt"></i> Hapus Terpilih
+    </button>
+
+    <div class="table-responsive border rounded shadow-sm">
+        <table class="table table-hover table-bordered table-striped mb-0">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="text-center">
+                        <input type="checkbox" id="selectAll">
+                    </th>
+                    <th class="text-center">Judul</th>
+                    <th class="text-center">Tanggal Dibuat</th>
+                    <th class="text-center">Link</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($videos as $index => $video)
+                <tr>
+                    <td class="align-middle text-center">
+                        <input type="checkbox" name="delete_ids[]" value="{{ $video['id'] }}" class="delete-checkbox">
+                    </td>
+                    <td class="align-middle">{{ Str::limit($video['title'] ?? 'Judul tidak tersedia', 100) }}</td>
+                    <td class="align-middle text-center">
+                        {{ \Carbon\Carbon::parse($video['created_at'] ?? now())->format('D, d F Y, h:i A') }}
+                    </td>
+                    <td class="align-middle text-center">
+                        {{ Str::limit($video['video_links'] ?? 'Judul tidak tersedia', 30) }}
+                    </td>
+                    <td class="align-middle text-center">
+                        <div class="d-flex flex-row w-100">
+                            <a href="{{ $video['video_links'] }}" target="_blank"
+                                class="btn btn-success btn-sm mr-1 w-100">
+                                <i class="fas fa-external-link-alt"></i> Lihat
+                            </a>
+                            <a href="{{ route('video.edit', ['id' => $video['id'] ?? 0]) }}"
+                                class="btn btn-warning btn-sm w-100 mx-1 text-dark">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form action="{{ route('video.destroy', ['id' => $video['id']]) }}" method="POST"
+                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus video ini?');"
+                                class="w-100 ml-1">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm w-100">
+                                    <i class="fas fa-trash-alt"></i> Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</form>
 
 <div class="d-flex justify-content-center mt-5">
     {{ $videos->links() }}
@@ -119,5 +147,24 @@
     <i class="fas fa-exclamation-triangle mr-2"></i><span>Data video tidak ditemukan.</span>
 </div>
 @endif
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('.delete-checkbox');
+    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+    const selectAll = document.getElementById('selectAll');
+
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            bulkDeleteBtn.disabled = !Array.from(checkboxes).some(c => c.checked);
+        });
+    });
+
+    selectAll.addEventListener('change', function () {
+        checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        bulkDeleteBtn.disabled = !selectAll.checked;
+    });
+});
+</script>
 
 @endsection

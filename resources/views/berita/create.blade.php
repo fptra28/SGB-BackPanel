@@ -34,8 +34,10 @@
         <!-- Isi Berita -->
         <div class="form-group">
             <label class="font-weight-bolder" for="Isi">Isi Berita</label>
-            <textarea class="form-control @error('Isi') is-invalid @enderror" id="Isi"
-                name="Isi">{{ old('Isi') }}</textarea>
+            <div class="shadow border rounded-lg">
+                <textarea class="form-control @error('Isi') is-invalid @enderror" id="Isi"
+                    name="Isi">{{ old('Isi') }}</textarea>
+            </div>
             @error('Isi')
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -61,25 +63,6 @@
     media_dimensions: true,
     object_resizing: "img",
     automatic_uploads: true,
-    images_upload_url: '/upload-image', // Ganti dengan route untuk upload gambar
-    images_upload_handler: function (blobInfo, success, failure) {
-        let formData = new FormData();
-        formData.append('file', blobInfo.blob());
-
-        fetch('/upload-image', { // Ganti dengan URL endpoint backend
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.location) {
-                success(data.location); // Masukkan URL gambar yang berhasil diunggah
-            } else {
-                failure('Gagal mengunggah gambar.');
-            }
-        })
-        .catch(() => failure('Terjadi kesalahan saat mengunggah gambar.'));
-    },
     image_class_list: [
         { title: 'Responsive', value: 'img-fluid' }
     ],

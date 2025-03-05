@@ -1,10 +1,22 @@
 @extends('layouts.admin')
 
 @section('main-content')
-@if(session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
-@elseif(session('error'))
-<div class="alert alert-danger">{{ session('error') }}</div>
+@if (session('success'))
+<div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
+
+@if (session('error'))
+<div class="alert alert-danger border-left-danger alert-dismissible fade show" role="alert">
+    {{ session('error') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 @endif
 
 <div class="mb-2 d-flex justify-content-between align-items-center">
@@ -60,48 +72,66 @@
 </div>
 
 @if ($users->count() > 0)
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
-    @foreach ($users as $user)
-    <div class="col mb-3">
-        <div class="card shadow h-100 d-flex flex-column">
-            <div class="card-body d-flex flex-column h-100">
-                <h5 class="card-title font-weight-bold text-dark">
-                    {{ $user['name'] ?? 'Nama tidak ditemukan' }} {{ $user['last_name'] }}
-                </h5>
-
-                <div class="mb-3">
-                    <p class="card-text">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar-alt mr-2"></i>
-                            {{ \Carbon\Carbon::parse($user['created_at'] ?? now())->format('D, d F Y, h:i A') }}
-                        </small>
-                    </p>
-                </div>
-
-                <div class="d-flex mt-auto">
-                    <a href="{{ route('berita.edit', ['id' => $user['id'] ?? 0]) }}"
-                        class="btn btn-warning text-dark flex-grow-1 mx-1">Edit</a>
-                    @if (!empty($user['id']))
-                    <form action="{{ route('berita.destroy', ['id' => $user['id']]) }}" method="POST"
-                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus berita ini?');"
-                        class="flex-grow-1 mx-1">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger w-100">Hapus</button>
-                    </form>
+<div class="table-responsive border rounded shadow-sm">
+    <table class="table table-hover table-bordered table-striped mb-0">
+        <thead class="thead-dark">
+            <tr>
+                <th class="align-middle text-center">#</th>
+                <th class="align-middle text-center">Nama</th>
+                <th class="align-middle text-center">Email</th>
+                <th class="align-middle text-center">Tanggal Dibuat</th>
+                <th class="align-middle text-center">Role</th>
+                <th class="align-middle text-center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($users as $index => $user)
+            <tr>
+                <td class="align-middle text-center">{{ $index + 1 }}</td>
+                <td class="align-middle">{{ $user['name'] ?? 'Nama tidak ditemukan' }} {{ $user['last_name']
+                    }}</td>
+                <td class="align-middle">{{ $user['email']?? 'Email tidak ditemukan' }}</td>
+                <td class="align-middle">
+                    <small class="text-muted">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        {{ \Carbon\Carbon::parse($user['created_at'] ?? now())->format('D, d F Y, h:i A') }}
+                    </small>
+                </td>
+                <td class="align-middle text-center text-capitalize">
+                    @if ($user['role'] == 'superadmin')
+                    <span class="badge badge-success text-dark">Superadmin</span>
+                    @else
+                    <span class="badge badge-info text-dark">Admin</span>
                     @endif
-                </div>
-            </div>
-        </div>
-    </div>
-    @endforeach
+                </td>
+                <td class="align-middle text-center">
+                    <div class="d-flex flex-row w-100">
+                        <a href="{{ route('user.edit', ['id' => $user['id'] ?? 0]) }}"
+                            class="btn btn-warning btn-sm w-100 mx-1 text-dark">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form action="{{ route('video.destroy', ['id' => $user['id']]) }}" method="POST"
+                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus video ini?');"
+                            class="w-100 ml-1">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm w-100">
+                                <i class="fas fa-trash-alt"></i> Hapus
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
-
 @else
 <!-- Tampilkan Pesan Jika Data Tidak Ditemukan -->
 <div class="alert alert-warning text-center mt-4">
     <i class="fas fa-exclamation-triangle mr-2"></i><span>Data berita tidak ditemukan.</span>
 </div>
 @endif
+
 
 @endsection

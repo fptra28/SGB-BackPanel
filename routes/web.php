@@ -51,20 +51,22 @@ Route::put('/video/edit/put/{id}', 'VideoController@update')->name('video.update
 
 Route::delete('/video/delete/{id}', 'VideoController@destroy')->name('video.destroy');
 
+Route::delete('/video/delete', 'VideoController@bulkDelete')->name('video.bulkDelete');
+
 // Profile Routes
 Route::get('/profile', 'ProfileController@index')->name('profile');
 
 Route::put('/profile', 'ProfileController@update')->name('profile.update');
 
-// User Management Routes
-// Route::get('/users', 'UserController@index')->name('user.index');
+// User Management Routes (Superadmin only)
+Route::get('/users', 'UserController@index')->name('user.index')->middleware('role:superadmin');
 
-// Route::post('/users', 'UserController@store')->name('user.store');
+Route::post('/users', 'UserController@store')->name('user.store')->middleware('role:superadmin');
 
-// Route::get('/users/create', 'UserController@create')->name('user.create');
+Route::get('/users/create', 'UserController@create')->name('user.create')->middleware('role:superadmin');
 
-// Route::get('/users/edit/{id}', 'UserController@edit')->name('user.edit');
+Route::put('/users/edit/put/{id}', 'UserController@update')->name('user.update')->middleware('role:superadmin');
 
-// Route::put('/users/edit/put/{id}', 'UserController@update')->name('user.update');
+Route::get('/users/edit/{id}', 'UserController@edit')->name('user.edit')->middleware('role:superadmin');
 
-// Route::delete('/users/delete/{id}', 'UserController@destroy')->name('user.destroy');
+Route::delete('/users/delete/{id}', 'UserController@destroy')->name('user.destroy')->middleware('role:superadmin');

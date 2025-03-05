@@ -34,7 +34,7 @@ class BeritaController extends Controller
         $search = request()->query('search');
 
         // Mengambil data dari API menggunakan HTTP client
-        $response = Http::get("{$this->baseUrl}/api/berita");
+        $response = Http::get("http://sgb-backpanel.test/api/berita");
 
         if ($response->successful()) {
             $data = $response->json();
@@ -116,7 +116,7 @@ class BeritaController extends Controller
         $encodedJudul = urlencode($judul);
 
         // Panggil API detail berita berdasarkan jdID
-        $response = Http::get("{$this->baseUrl}/api/berita/detail?jdID={$encodedJudul}");
+        $response = Http::get("http://sgb-backpanel.test/api/berita/detail?jdID={$encodedJudul}");
 
         if ($response->successful()) {
             $berita = $response->json(); // Ambil data JSON dari API

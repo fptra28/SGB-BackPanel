@@ -37,7 +37,6 @@ class LoginController extends Controller
         // Ambil user yang sedang login
         $user = Auth::user();
 
-
         $user->token()->delete();
 
         // Buat token baru

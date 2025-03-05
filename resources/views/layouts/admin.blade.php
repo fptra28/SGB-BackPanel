@@ -82,13 +82,22 @@
                 </a>
             </li>
 
+            @if(auth()->user()->role == 'superadmin')
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <div class="sidebar-heading">
+                {{ __('Manage') }}
+            </div>
+
             <!-- Nav Item - User -->
-            {{-- <li class="nav-item {{ Nav::isRoute('user.*') }}">
+            <li class="nav-item {{ Nav::isRoute('user.*') }}">
                 <a class="nav-link" href="{{ route('user.index') }}">
                     <i class="fa-solid fa-users"></i>
-                    <span>{{ __('User') }}</span>
+                    <span>{{ __('User ') }}</span> <span>{{ __('(Coming Soon)') }}</span>
                 </a>
-            </li> --}}
+            </li>
+            @endif
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -97,7 +106,6 @@
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-
         </ul>
         <!-- End of Sidebar -->
 

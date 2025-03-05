@@ -134,4 +134,19 @@ class VideoController extends Controller
 
         return redirect()->route('video.index')->with('success', 'Video berhasil dihapus.');
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->delete_ids;
+
+        if ($ids) {
+            VideoLink::whereIn('id', $ids)->delete();
+            return redirect()->route('video.index')->with('success', 'Data video berhasil dihapus.');
+        }
+
+        return redirect()->route('video.index')->with('error', 'Tidak ada video yang dipilih.');
+    }
 }

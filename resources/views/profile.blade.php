@@ -3,13 +3,22 @@
 @section('main-content')
 <!-- Page Heading -->
 <div class="d-flex align-items-center mb-4">
-    <a href="{{route('berita.berita')}}" class="text-dark h3 mr-3" aria-label="Close">&times;</a>
+    <a href="{{route('home')}}" class="text-dark h3 mr-3" aria-label="Close">&times;</a>
     <span class="h3 text-gray-800">{{ __('Profile') }}</span>
 </div>
 
 @if (session('success'))
 <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
     {{ session('success') }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
+
+@if (session('error'))
+<div class="alert alert-danger border-left-danger alert-dismissible fade show" role="alert">
+    {{ session('error') }}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -42,38 +51,15 @@
                     <div class="col-lg-12">
                         <div class="text-center">
                             <h5 class="font-weight-bold">{{ Auth::user()->fullName }}</h5>
-                            <p>Administrator</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card-profile-stats">
-                            <span class="heading">22</span>
-                            <span class="description">Friends</span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card-profile-stats">
-                            <span class="heading">10</span>
-                            <span class="description">Photos</span>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card-profile-stats">
-                            <span class="heading">89</span>
-                            <span class="description">Comments</span>
+                            <p class="text-capitalize">{{ Auth::user()->role }}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="col-lg-8 order-lg-1">
-
         <div class="card shadow mb-4">
 
             <div class="card-header py-3">
