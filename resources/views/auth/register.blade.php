@@ -15,36 +15,44 @@
                                 </div>
 
                                 @if ($errors->any())
-                                    <div class="alert alert-danger border-left-danger" role="alert">
-                                        <ul class="pl-4 my-2">
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
+                                <div class="alert alert-danger border-left-danger" role="alert">
+                                    <ul class="pl-4 my-2">
+                                        @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                                 @endif
 
                                 <form method="POST" action="{{ route('register') }}" class="user">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" name="name" placeholder="{{ __('Name') }}" value="{{ old('name') }}" required autofocus>
+                                        <input type="text" class="form-control form-control-user" name="name"
+                                            placeholder="{{ __('Name') }}" value="{{ old('name') }}" required autofocus>
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" name="last_name" placeholder="{{ __('Last Name') }}" value="{{ old('last_name') }}" required>
+                                        <input type="text" class="form-control form-control-user" name="last_name"
+                                            placeholder="{{ __('Last Name (Opsional)') }}"
+                                            value="{{ old('last_name') }}">
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="email" class="form-control form-control-user" name="email" placeholder="{{ __('E-Mail Address') }}" value="{{ old('email') }}" required>
+                                        <input type="email" class="form-control form-control-user" name="email"
+                                            placeholder="{{ __('E-Mail Address') }}" value="{{ old('email') }}"
+                                            required>
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" name="password" placeholder="{{ __('Password') }}" required>
+                                        <input type="password" class="form-control form-control-user" name="password"
+                                            placeholder="{{ __('Password') }}" required>
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" name="password_confirmation" placeholder="{{ __('Confirm Password') }}" required>
+                                        <input type="password" class="form-control form-control-user"
+                                            name="password_confirmation" placeholder="{{ __('Confirm Password') }}"
+                                            required>
                                     </div>
 
                                     <div class="form-group">

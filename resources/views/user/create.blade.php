@@ -15,7 +15,7 @@
 
         <!-- First Name -->
         <div class="form-group">
-            <label class="font-weight-bolder" for=name>First Name</label>
+            <label class="font-weight-bolder" for=name>First Name<span class="text-danger">*</span></label>
             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
                 value="{{ old('name') }}" required>
             @error('name')
@@ -27,7 +27,7 @@
         <div class="form-group">
             <label class="font-weight-bolder" for="last_name">Last Name</label>
             <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="last_name"
-                name="last_name" value="{{ old('last_name') }}" required>
+                name="last_name" value="{{ old('last_name') }}">
             @error('last_name')
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -35,7 +35,7 @@
 
         <!-- Email -->
         <div class="form-group">
-            <label class="font-weight-bolder" for="email">Email</label>
+            <label class="font-weight-bolder" for="email">Email<span class="text-danger">*</span></label>
             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
                 value="{{ old('email') }}" required>
             @error('email')
@@ -45,7 +45,7 @@
 
         <!-- Role -->
         <div class="form-group">
-            <label class="font-weight-bolder" for="role">Role</label>
+            <label class="font-weight-bolder" for="role">Role<span class="text-danger">*</span></label>
             <select class="form-control @error('role') is-invalid @enderror" id="role" name="role" required>
                 <option value="">Pilih Role</option>
                 <option value="superadmin">Superadmin</option>
@@ -58,7 +58,7 @@
 
         <!-- Password -->
         <div class="form-group">
-            <label class="font-weight-bolder" for="password">Password</label>
+            <label class="font-weight-bolder" for="password">Password<span class="text-danger">*</span></label>
             <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
                 name="password" required>
             @error('password')

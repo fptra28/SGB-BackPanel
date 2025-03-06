@@ -35,12 +35,18 @@
                 <input type="text" name="search" class="form-control" placeholder="Cari video..."
                     value="{{ request('search') }}">
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-secondary">Cari</button>
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fa fa-search"></i>
+                    </button>
                 </div>
             </div>
         </form>
-        <a href="{{ route('video.index') }}" class="btn btn-danger ml-2">Reset</a>
-        <a href="{{ route('video.create') }}" class="btn btn-primary ml-2">Tambah Video</a>
+        <a href="{{ route('video.index') }}" class="btn btn-danger ml-2">
+            <i class="fa-solid fa-rotate"></i> Reset
+        </a>
+        <a href="{{ route('video.create') }}" class="btn btn-primary ml-2">
+            <i class="fa-solid fa-plus"></i> Tambah Video
+        </a>
     </div>
 </div>
 
@@ -61,12 +67,18 @@
                         <input type="text" name="search" class="form-control" placeholder="Cari video..."
                             value="{{ request('search') }}">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-secondary">Cari</button>
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </div>
                 </form>
-                <a href="{{ route('video.index') }}" class="btn btn-danger btn-block mb-2">Reset</a>
-                <a href="{{ route('video.create') }}" class="btn btn-primary btn-block">Tambah Video</a>
+                <a href="{{ route('video.index') }}" class="btn btn-danger btn-block mb-2">
+                    <i class="fa-solid fa-rotate"></i> Reset
+                </a>
+                <a href="{{ route('video.create') }}" class="btn btn-primary btn-block">
+                    <i class="fa-solid fa-plus"></i> Tambah Video
+                </a>
             </div>
         </div>
     </div>

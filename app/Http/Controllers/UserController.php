@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,10 +23,19 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all(); // Ambil semua user
-        return view('user.user', compact('users'));
+        $authUser = Auth::user();
+        $search = $request->input('search');
+
+        $users = User::where('id', '!=', $authUser->id)
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%");
+            })
+            ->get();
+
+        return view('user.user', compact('users', 'search'));
     }
 
     /**
@@ -43,8 +53,8 @@ class UserController extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
             'email' => 'required|email|unique:users',
             'role' => 'required|in:superadmin,admin',
             'password' => 'required|min:8',
@@ -69,22 +79,17 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        // Cari data user berdasarkan id
         $user = User::findOrFail($id);
+        $authUser = Auth::user();
 
-        // Tampilkan halaman edit dengan data user
+        if ($user->id == $authUser->id) {
+            return redirect()->route('user.index')->with('error', 'Anda tidak dapat mengedit akun Anda sendiri.');
+        }
+
         return view('user.edit', compact('user'));
     }
 
@@ -93,7 +98,21 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $authUser = Auth::user();
+
+        if ($authUser->id == $id) {
+            return redirect()->route('user.index')->with('error', 'Anda tidak dapat memperbarui akun Anda sendiri.');
+        }
+
         $user = User::findOrFail($id);
+
+        // Validasi data
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'last_name' => 'nullable|string|max:50',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'role' => 'required|in:admin,user',
+        ]);
 
         $user->name = $request->name;
         $user->last_name = $request->last_name;
@@ -110,6 +129,15 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $authUser = Auth::user();
+
+        if ($authUser->id == $id) {
+            return redirect()->route('user.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('user.index')->with('success', 'User berhasil dihapus');
     }
 }

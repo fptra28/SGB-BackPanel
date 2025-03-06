@@ -70,3 +70,8 @@ Route::put('/users/edit/put/{id}', 'UserController@update')->name('user.update')
 Route::get('/users/edit/{id}', 'UserController@edit')->name('user.edit')->middleware('role:superadmin');
 
 Route::delete('/users/delete/{id}', 'UserController@destroy')->name('user.destroy')->middleware('role:superadmin');
+
+// Routes Handling Errors
+Route::get('/404', 'HandlingController@Error404')->name('404');
+
+Route::get('/403', 'HandlingController@Error403')->name('403');

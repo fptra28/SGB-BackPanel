@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\berita;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,14 @@ class ProfileController extends Controller
 
     public function index()
     {
-        return view('profile');
+        $user = Auth::user(); // Mendapatkan user yang sedang login
+        $berita = Berita::where('author_id', $user->id)->count(); // Menghitung jumlah berita berdasarkan user
+
+        $widgetByUser = [
+            'berita' => $berita,
+        ];
+
+        return view('profile', compact('widgetByUser'));
     }
 
     public function update(Request $request)

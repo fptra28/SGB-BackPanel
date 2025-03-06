@@ -30,19 +30,22 @@
                                 <form method="POST" action="{{ route('login') }}" class="user">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                                    <div class="form-group">
-                                        <input type="email" class="form-control form-control-user" name="email"
+                                    {{-- Email --}}
+                                    <div class="mb-3">
+                                        <label for="email">Email:</label>
+                                        <input type="email" class="form-control" name="email"
                                             placeholder="{{ __('E-Mail Address') }}" value="{{ old('email') }}" required
                                             autofocus>
                                     </div>
 
-                                    <div class="mb-3">
+                                    {{-- Password --}}
+                                    <div class="mb-5">
+                                        <label for="password">Password:</label>
                                         <div class="input-group">
-                                            <input type="password" class="form-control form-control-user password-field"
-                                                id="password" name="password" placeholder="{{ __('Password') }}"
-                                                required>
+                                            <input type="password" class="form-control" id="password" name="password"
+                                                placeholder="{{ __('Password') }}" required>
                                             <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary toggle-password" type="button"
+                                                <button class="btn btn-outline-secondary" type="button"
                                                     id="togglePassword">
                                                     <i class="fa fa-eye"></i>
                                                 </button>
@@ -50,15 +53,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" class="custom-control-input" name="remember"
-                                                id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                            <label class="custom-control-label" for="remember">{{ __('Remember Me')
-                                                }}</label>
-                                        </div>
-                                    </div>
-
+                                    {{-- Button Login --}}
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-dark btn-user btn-block">
                                             {{ __('LOGIN') }}

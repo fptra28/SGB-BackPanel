@@ -38,7 +38,6 @@
 <div class="row">
 
     <div class="col-lg-4 order-lg-2">
-
         <div class="card shadow mb-4">
             <div class="card-profile-image mt-4">
                 <figure class="rounded-circle avatar avatar font-weight-bold"
@@ -46,7 +45,6 @@
                 </figure>
             </div>
             <div class="card-body">
-
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="text-center">
@@ -54,6 +52,24 @@
                             <p class="text-capitalize">{{ Auth::user()->role }}</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body d-flex align-items-center">
+                <div class="rounded-circle bg-primary p-3 text-light">
+                    <i class="fa-solid fa-newspaper fa-2x"></i>
+                </div>
+                <div class="ml-3">
+                    <h5 class="mb-0 font-weight-bold">Jumlah berita yang telah dibuat</h5>
+                    <p class="mb-0 text-primary">
+                        @if ($widgetByUser['berita'] == null)
+                        Belum membuat berita
+                        @else
+                        {{ $widgetByUser['berita'] }} Berita
+                        @endif
+                    </p>
                 </div>
             </div>
         </div>
@@ -132,10 +148,12 @@
                     </div>
 
                     <!-- Button -->
-                    <div class="pl-lg-4">
+                    <div class="pl-lg-4 mt-3">
                         <div class="row">
-                            <div class="col text-center">
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa-regular fa-floppy-disk"></i> Save Changes
+                                </button>
                             </div>
                         </div>
                     </div>

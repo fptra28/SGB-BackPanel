@@ -33,12 +33,18 @@
                 <input type="text" name="search" class="form-control" placeholder="Cari berita..."
                     value="{{ request('search') }}">
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-secondary">Cari</button>
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fa fa-search"></i>
+                    </button>
                 </div>
             </div>
         </form>
-        <a href="{{ route('berita.berita') }}" class="btn btn-danger ml-2">Reset</a>
-        <a href="{{ route('berita.create') }}" class="btn btn-primary ml-2">Tambah Berita</a>
+        <a href="{{ route('berita.berita') }}" class="btn btn-danger ml-2">
+            <i class="fa-solid fa-rotate"></i> Reset
+        </a>
+        <a href="{{ route('berita.create') }}" class="btn btn-primary ml-2">
+            <i class="fa-solid fa-plus"></i> Tambah Berita
+        </a>
     </div>
 </div>
 
@@ -59,12 +65,18 @@
                         <input type="text" name="search" class="form-control" placeholder="Cari berita..."
                             value="{{ request('search') }}">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-secondary">Cari</button>
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </div>
                 </form>
-                <a href="{{ route('berita.berita') }}" class="btn btn-danger btn-block mb-2">Reset</a>
-                <a href="{{ route('berita.create') }}" class="btn btn-primary btn-block">Tambah Berita</a>
+                <a href="{{ route('berita.berita') }}" class="btn btn-danger btn-block mb-2">
+                    <i class="fa-solid fa-rotate"></i> Reset
+                </a>
+                <a href="{{ route('berita.create') }}" class="btn btn-primary btn-block">
+                    <i class="fa-solid fa-plus"></i> Tambah Berita
+                </a>
             </div>
         </div>
     </div>

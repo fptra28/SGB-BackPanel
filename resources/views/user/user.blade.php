@@ -29,17 +29,23 @@
 
     <!-- Tombol Navigasi (Tampil di Desktop) -->
     <div class="d-none d-md-flex align-items-center">
-        <form action="{{ route('user.index') }}" method="GET" class="form-inline">
+        <form action="" method="GET" class="form-inline">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Cari User..."
                     value="{{ request('search') }}">
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-secondary">Cari</button>
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fa fa-search"></i>
+                    </button>
                 </div>
             </div>
         </form>
-        <a href="{{ route('user.index') }}" class="btn btn-danger ml-2">Reset</a>
-        <a href="{{ route('user.create') }}" class="btn btn-primary ml-2">Tambah User</a>
+        <a href="{{ route('user.index') }}" class="btn btn-danger ml-2">
+            <i class="fa-solid fa-rotate"></i> Reset
+        </a>
+        <a href="{{ route('user.create') }}" class="btn btn-primary ml-2">
+            <i class="fa-solid fa-plus"></i> Tambah User
+        </a>
     </div>
 </div>
 
@@ -55,17 +61,23 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('berita.berita') }}" method="GET" class="mb-2">
+                <form action="" method="GET" class="form-inline">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="Cari User..."
                             value="{{ request('search') }}">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-secondary">Cari</button>
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </div>
                 </form>
-                <a href="{{ route('user.index') }}" class="btn btn-danger btn-block mb-2">Reset</a>
-                <a href="{{ route('user.create') }}" class="btn btn-primary btn-block">Tambah User</a>
+                <a href="{{ route('user.index') }}" class="btn btn-danger btn-block mb-2">
+                    <i class="fa-solid fa-rotate"></i> Reset
+                </a>
+                <a href="{{ route('user.create') }}" class="btn btn-primary btn-block">
+                    <i class="fa-solid fa-plus"></i> Tambah User
+                </a>
             </div>
         </div>
     </div>
@@ -110,8 +122,8 @@
                             class="btn btn-warning btn-sm w-100 mx-1 text-dark">
                             <i class="fas fa-edit"></i> Edit
                         </a>
-                        <form action="{{ route('video.destroy', ['id' => $user['id']]) }}" method="POST"
-                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus video ini?');"
+                        <form action="{{ route('user.destroy', ['id' => $user['id']]) }}" method="POST"
+                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini?');"
                             class="w-100 ml-1">
                             @csrf
                             @method('DELETE')

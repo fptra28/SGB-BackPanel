@@ -10,8 +10,9 @@
     <!-- Form Edit User -->
     <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data"
         class="container bg-light px-4 py-2 rounded">
-        @csrf
-        @method('PUT')
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+        <input type="hidden" name="_method" value="PUT">
 
         <!-- First Name -->
         <div class="form-group">

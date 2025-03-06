@@ -94,7 +94,7 @@
             <li class="nav-item {{ Nav::isRoute('user.*') }}">
                 <a class="nav-link" href="{{ route('user.index') }}">
                     <i class="fa-solid fa-users"></i>
-                    <span>{{ __('User ') }}</span> <span>{{ __('(Coming Soon)') }}</span>
+                    <span>{{ __('User ') }}</span>
                 </a>
             </li>
             @endif

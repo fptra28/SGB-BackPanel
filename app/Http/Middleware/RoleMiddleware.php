@@ -14,6 +14,6 @@ class RoleMiddleware
             return $next($request);
         }
 
-        return redirect()->route('home')->with('error', 'Anda tidak memiliki akses ke halaman ini');
+        return redirect()->route('403')->with('error', 'Anda tidak memiliki akses ke halaman ini');
     }
 }
