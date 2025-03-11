@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -17,6 +19,20 @@ class berita extends Model
         'Isi',
         'author_id',
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)
+            ->timezone('Asia/Jakarta')
+            ->format('d F Y, H:i');
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::parse($value)
+            ->timezone('Asia/Jakarta')
+            ->format('d F Y, H:i');
+    }
 
     // Relasi ke model User (Penulis berita)
     public function author()

@@ -40,7 +40,7 @@
     <div class="col-lg-4 order-lg-2">
         <div class="card shadow mb-4">
             <div class="card-profile-image mt-4">
-                <figure class="rounded-circle avatar avatar font-weight-bold"
+                <figure class="rounded-circle avatar avatar font-weight-bold text-uppercase"
                     style="font-size: 60px; height: 180px; width: 180px;" data-initial="{{ Auth::user()->name[0] }}">
                 </figure>
             </div>
@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <div class="card shadow">
+        <div class="card shadow mb-4">
             <div class="card-body d-flex align-items-center">
                 <div class="rounded-circle bg-primary p-3 text-light">
                     <i class="fa-solid fa-newspaper fa-2x"></i>

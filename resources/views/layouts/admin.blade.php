@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Laravel SB Admin 2">
     <meta name="author" content="Alejandro RH">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -35,7 +34,7 @@
         <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home') }}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
                 <div class="sidebar-brand-icon">
                     <img src="{{ asset('img/LOGO-SGB.png') }}" alt="Logo SGB" class="img-fluid"
                         style="width: 30px; height: auto;">
@@ -55,7 +54,7 @@
             <li class="nav-item {{ Nav::isRoute('home') }}">
                 <a class="nav-link" href="{{ route('home') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>{{ __('Dashboard') }}</span></a>
+                    <span>{{ __('Beranda') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -94,7 +93,15 @@
             <li class="nav-item {{ Nav::isRoute('user.*') }}">
                 <a class="nav-link" href="{{ route('user.index') }}">
                     <i class="fa-solid fa-users"></i>
-                    <span>{{ __('User ') }}</span>
+                    <span>{{ __('User') }}</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - User -->
+            <li class="nav-item {{ Nav::isRoute('hero.*') }}">
+                <a class="nav-link" href="">
+                    <i class="fa-solid fa-image"></i>
+                    <span>{{ __('Hero') }}</span>
                 </a>
             </li>
             @endif
@@ -132,7 +139,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name
+                                <span class="mr-2 text-gray-600 small">{{ Auth::user()->name
                                     }}</span>
                                 <figure class="img-profile rounded-circle avatar font-weight-bold"
                                     data-initial="{{ Auth::user()->name[0] }}"></figure>

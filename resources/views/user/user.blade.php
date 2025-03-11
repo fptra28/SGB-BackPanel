@@ -102,8 +102,8 @@
                 <td class="align-middle text-center">{{ $index + 1 }}</td>
                 <td class="align-middle">{{ $user['name'] ?? 'Nama tidak ditemukan' }} {{ $user['last_name']
                     }}</td>
-                <td class="align-middle">{{ $user['email']?? 'Email tidak ditemukan' }}</td>
-                <td class="align-middle">
+                <td class="align-middle text-center">{{ $user['email']?? 'Email tidak ditemukan' }}</td>
+                <td class="align-middle text-center">
                     <small class="text-muted">
                         <i class="fas fa-calendar-alt mr-2"></i>
                         {{ \Carbon\Carbon::parse($user['created_at'] ?? now())->format('D, d F Y, h:i A') }}
@@ -118,16 +118,24 @@
                 </td>
                 <td class="align-middle text-center">
                     <div class="d-flex flex-row w-100">
-                        <a href="{{ route('user.edit', ['id' => $user['id'] ?? 0]) }}"
-                            class="btn btn-warning btn-sm w-100 mx-1 text-dark">
+                        @php
+                        $isSameUser = Auth::user()->id == $user['id'];
+                        $isDisabled = $user['name'] == 'Superadmin';
+                        $isDisabledDelete = Auth::user()->id == $user['id'] || $user['name'] == 'Superadmin';
+                        $editRoute = $isSameUser ? route('profile') : route('user.edit', ['id' => $user['id'] ?? 0]);
+                        @endphp
+
+                        <a href="{{ $editRoute }}"
+                            class="btn btn-warning btn-sm text-dark flex-fill mr-2 {{ $isDisabled ? 'disabled' : '' }}">
                             <i class="fas fa-edit"></i> Edit
                         </a>
-                        <form action="{{ route('user.destroy', ['id' => $user['id']]) }}" method="POST"
-                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini?');"
-                            class="w-100 ml-1">
+
+                        <form action="{{ route('user.destroy', ['id' => $user['id'] ?? 0]) }}" method="POST"
+                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini?');" class="flex-fill">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm w-100">
+                            <button type="{{ $isDisabledDelete ? 'button' : 'submit' }}"
+                                class="btn btn-danger btn-sm w-100 {{ $isDisabledDelete ? 'disabled' : '' }}">
                                 <i class="fas fa-trash-alt"></i> Hapus
                             </button>
                         </form>
@@ -137,6 +145,9 @@
             @endforeach
         </tbody>
     </table>
+</div>
+<div class="d-flex justify-content-center mt-3">
+    {{ $users->appends(['search' => request('search')])->links() }}
 </div>
 @else
 <!-- Tampilkan Pesan Jika Data Tidak Ditemukan -->

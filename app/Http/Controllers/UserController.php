@@ -25,15 +25,21 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $authUser = Auth::user();
         $search = $request->input('search');
 
-        $users = User::where('id', '!=', $authUser->id)
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%$search%")
-                    ->orWhere('email', 'like', "%$search%");
-            })
-            ->get();
+        // Query pencarian dengan pagination
+        $users = User::when($search, function ($query) use ($search) {
+            $query->where('name', 'like', "%$search%")
+                ->orWhere('last_name', 'like', "%$search%")
+                ->orWhere('email', 'like', "%$search%");
+
+            // Pastikan hanya mencari role jika input cocok dengan salah satu enum
+            if (in_array(strtolower($search), ['superadmin', 'admin'])) {
+                $query->orWhere('role', strtolower($search));
+            }
+        })
+            ->orderBy('role', 'asc')
+            ->paginate(10);
 
         return view('user.user', compact('users', 'search'));
     }
@@ -51,12 +57,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'email' => 'required|email|unique:users',
-            'role' => 'required|in:superadmin,admin',
+            'role' => 'required|in:superadmin,admin,user',
             'password' => 'required|min:8',
         ]);
 
@@ -66,13 +71,12 @@ class UserController extends Controller
                 ->withInput();
         }
 
-        // Simpan data user ke database
         $user = new User();
         $user->name = $request->name;
         $user->last_name = $request->last_name;
         $user->email = $request->email;
         $user->role = $request->role;
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->save();
 
         return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan');
@@ -81,10 +85,14 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
         $user = User::findOrFail($id);
         $authUser = Auth::user();
+
+        if ($user->name == 'Superadmin') {
+            return redirect()->route('user.index')->with('error', 'Superadmin tidak bisa diedit.');
+        }
 
         if ($user->id == $authUser->id) {
             return redirect()->route('user.index')->with('error', 'Anda tidak dapat mengedit akun Anda sendiri.');
@@ -96,17 +104,19 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
+        $user = User::findOrFail($id);
         $authUser = Auth::user();
+
+        if ($user->name == 'Superadmin') {
+            return redirect()->route('user.index')->with('error', 'Superadmin tidak bisa diperbarui.');
+        }
 
         if ($authUser->id == $id) {
             return redirect()->route('user.index')->with('error', 'Anda tidak dapat memperbarui akun Anda sendiri.');
         }
 
-        $user = User::findOrFail($id);
-
-        // Validasi data
         $request->validate([
             'name' => 'required|string|max:50',
             'last_name' => 'nullable|string|max:50',
@@ -118,7 +128,6 @@ class UserController extends Controller
         $user->last_name = $request->last_name;
         $user->email = $request->email;
         $user->role = $request->role;
-
         $user->save();
 
         return redirect()->route('user.index')->with('success', 'User berhasil diperbarui');
@@ -127,15 +136,19 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
+        $user = User::findOrFail($id);
         $authUser = Auth::user();
+
+        if ($user->name == 'Superadmin') {
+            return redirect()->route('user.index')->with('error', 'Superadmin tidak bisa dihapus.');
+        }
 
         if ($authUser->id == $id) {
             return redirect()->route('user.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
 
-        $user = User::findOrFail($id);
         $user->delete();
 
         return redirect()->route('user.index')->with('success', 'User berhasil dihapus');

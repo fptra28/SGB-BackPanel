@@ -18,7 +18,7 @@ use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 */
 
 // Authentification routes
-Auth::routes();
+Auth::routes(['register' => false]);
 
 // Home Page Routes
 Route::get('/', 'HomeController@index')->name('home');

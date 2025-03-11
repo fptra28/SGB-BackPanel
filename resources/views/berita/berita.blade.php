@@ -97,14 +97,13 @@
 
                 <div class="mb-3">
                     <p class="card-text text-muted mb-1">
-                        <i class="fas fa-user mr-2"></i>
-                        {{ $berita['author']['name'] ?? 'Tidak ada penulis' }}
-                        {{ $berita['author']['last_name'] ?? 'Tidak ada penulis' }}
+                        <i class="fas fa-user mr-2"></i>{{ $berita['author']['name'] ?? 'Tidak ada penulis' }}
+                        {{ $berita['author']['last_name'] }}
                     </p>
                     <p class="card-text">
                         <small class="text-muted">
                             <i class="fas fa-calendar-alt mr-2"></i>
-                            {{ \Carbon\Carbon::parse($berita['created_at'] ?? now())->format('D, d F Y, h:i A') }}
+                            {{ \Carbon\Carbon::parse($berita['created_at'])->translatedFormat('l, d F Y, H:i') }}
                         </small>
                     </p>
                 </div>
@@ -113,22 +112,30 @@
                     <div class="row no-gutters">
                         <div class="col-4 pr-1">
                             <a href="{{ route('berita.detail', ['judul' => rawurlencode($berita['Judul'] ?? '')]) }}"
-                                class="btn btn-success btn-block text-dark">Lihat</a>
+                                class="btn btn-success btn-sm btn-block text-dark">
+                                <i class="fas fa-external-link-alt"></i> Lihat
+                            </a>
                         </div>
                         <div class="col-4 px-1">
                             <a href="{{ route('berita.edit', ['id' => $berita['id'] ?? 0]) }}"
-                                class="btn btn-warning btn-block text-dark">Edit</a>
+                                class="btn btn-warning btn-sm btn-block text-dark">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
                         </div>
                         @if (!empty($berita['id']))
-                        <form action="{{ route('berita.destroy', ['id' => $berita['id']]) }}" method="POST"
-                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus berita ini?');"
-                            class="col-4 px-1">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-block text-delete">Hapus</button>
-                        </form>
+                        <div class="col-4 pl-1">
+                            <form action="{{ route('berita.destroy', ['id' => $berita['id']]) }}" method="POST"
+                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus berita ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm btn-block text-delete">
+                                    <i class="fas fa-trash-alt"></i> Hapus
+                                </button>
+                            </form>
+                        </div>
                         @endif
                     </div>
+
                 </div>
             </div>
         </div>

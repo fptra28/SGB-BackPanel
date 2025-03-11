@@ -2,7 +2,7 @@
 
 @section('main-content')
 <div class="container d-flex flex-column justify-content-center align-items-center">
-    <div class="shadow border-secondary p-5 rounded shadow-lg text-center">
+    <div class="border-secondary p-5 rounded text-center">
         <div class="mx-auto">
             <svg id='Server_Error_404_Not_Found_Window_150' width='150' height='150' viewBox='0 0 48 48'
                 xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
@@ -137,15 +137,15 @@
                 </g>
             </svg>
         </div>
-        <h1 class="mt-3 text-danger"><strong>Page Not Found</strong></h1>
-        <h4>We can't find the page you're looking for.</h4>
+        <h1 class="mt-3 text-danger"><strong>404 Not Found</strong></h1>
+        <h4>Kami tidak dapat menemukan halaman yang Anda cari.</h4>
         <div class="mt-4">
-            <small><strong>Error Code: </strong>404</small>
+            <small><strong>Kode Error: </strong>404</small>
         </div>
         <div class="mt-5">
             <a href="{{ route('home') }}">
-                <button class="btn btn-primary">
-                    Return to Dashboard
+                <button class="btn btn-outline-primary">
+                    Kembali ke beranda
                 </button>
             </a>
         </div>

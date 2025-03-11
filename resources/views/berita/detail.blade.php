@@ -20,11 +20,11 @@
             <div class="m-0 d-flex flex-column flex-lg-row">
                 <p class="m-0 font-weight-bold">
                     {{ $berita['data']['author']['name'] ?? 'Tidak ada penulis' }}
-                    {{ $berita['data']['author']['last_name'] ?? 'Tidak ada penulis' }}
+                    {{ $berita['data']['author']['last_name'] }}
                 </p>
                 <span class="mx-3 d-none d-lg-flex">|</span>
                 <p class="m-0">
-                    {{ \Carbon\Carbon::parse($berita['data']['created_at'])->format('D, d F Y, h:i A') }}</p>
+                    {{ \Carbon\Carbon::parse($berita['data']['created_at'])->translatedFormat('l, d F Y, H:i') }}
             </div>
             <p>{!! $berita['data']['Isi'] !!}</p>
         </div>

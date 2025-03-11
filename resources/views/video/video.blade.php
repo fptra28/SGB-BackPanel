@@ -116,27 +116,28 @@
                     </td>
                     <td class="align-middle">{{ Str::limit($video['title'] ?? 'Judul tidak tersedia', 100) }}</td>
                     <td class="align-middle text-center">
-                        {{ \Carbon\Carbon::parse($video['created_at'] ?? now())->format('D, d F Y, h:i A') }}
+                        {{ \Carbon\Carbon::parse($video['updated_at'])->translatedFormat('l, d F Y, H:i') }}
                     </td>
                     <td class="align-middle text-center">
                         {{ Str::limit($video['video_links'] ?? 'Judul tidak tersedia', 30) }}
                     </td>
                     <td class="align-middle text-center">
-                        <div class="d-flex flex-row w-100">
+                        <div class="d-flex justify-content-center">
                             <a href="{{ $video['video_links'] }}" target="_blank"
-                                class="btn btn-success btn-sm mr-1 w-100">
+                                class="btn btn-success btn-sm text-dark mx-1 w-100">
                                 <i class="fas fa-external-link-alt"></i> Lihat
                             </a>
+
                             <a href="{{ route('video.edit', ['id' => $video['id'] ?? 0]) }}"
-                                class="btn btn-warning btn-sm w-100 mx-1 text-dark">
+                                class="btn btn-warning btn-sm mx-1 text-dark w-100">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
+
                             <form action="{{ route('video.destroy', ['id' => $video['id']]) }}" method="POST"
-                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus video ini?');"
-                                class="w-100 ml-1">
+                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus video ini?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm w-100">
+                                <button type="submit" class="btn btn-danger btn-sm mx-1 w-100">
                                     <i class="fas fa-trash-alt"></i> Hapus
                                 </button>
                             </form>
@@ -166,17 +167,25 @@
     const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
     const selectAll = document.getElementById('selectAll');
 
+    function toggleBulkDeleteButton() {
+        const isChecked = Array.from(checkboxes).some(c => c.checked);
+        bulkDeleteBtn.style.display = isChecked ? 'inline-block' : 'none';
+        bulkDeleteBtn.disabled = !isChecked;
+    }
+
     checkboxes.forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () {
-            bulkDeleteBtn.disabled = !Array.from(checkboxes).some(c => c.checked);
-        });
+        checkbox.addEventListener('change', toggleBulkDeleteButton);
     });
 
     selectAll.addEventListener('change', function () {
         checkboxes.forEach(cb => cb.checked = selectAll.checked);
-        bulkDeleteBtn.disabled = !selectAll.checked;
+        toggleBulkDeleteButton();
     });
+
+    // Sembunyikan tombol di awal jika tidak ada checkbox yang dicentang
+    toggleBulkDeleteButton();
 });
+
 </script>
 
 @endsection

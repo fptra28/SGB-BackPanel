@@ -2,7 +2,7 @@
 
 @section('main-content')
 <div class="container d-flex flex-column justify-content-center align-items-center">
-    <div class="shadow border-secondary p-5 rounded shadow-lg text-center">
+    <div class="border-secondary p-5 rounded text-center">
         <div class="mx-auto">
             <svg width="150px" height="150px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -14,13 +14,17 @@
                 </g>
             </svg>
         </div>
-        <h1 class="mt-3"><strong>Access Denied</strong></h1>
-        <h4>You do not have permission to view this page.</h4>
+        <h1 class="mt-3"><strong>Akses Ditolak</strong></h1>
+        <h4>Anda tidak memiliki izin untuk melihat halaman ini.</h4>
         <div class="mt-5">
-            <small><strong>Error Code: </strong>403</small>
+            <small><strong>Kode Error: </strong>403</small>
         </div>
         <div class="mt-5">
-            <a href="{{ route('home') }}"><button class="btn btn-primary">Return to Dashboard</button></a>
+            <a href="{{ route('home') }}">
+                <button class="btn btn-outline-primary">
+                    Kembali ke beranda
+                </button>
+            </a>
         </div>
     </div>
 </div>
