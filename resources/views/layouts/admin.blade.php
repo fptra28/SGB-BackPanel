@@ -81,27 +81,34 @@
                 </a>
             </li>
 
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <div class="sidebar-heading">
+                {{ __('Manajemen Website') }}
+            </div>
+
+            <!-- Nav Item - Hero -->
+            <li class="nav-item {{ Nav::isRoute('hero.*') }}">
+                <a class="nav-link" href="{{ route('hero.index') }}">
+                    <i class="fa-solid fa-image"></i>
+                    <span>{{ __('Hero') }}</span>
+                </a>
+            </li>
+
             @if(auth()->user()->role == 'superadmin')
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
             <div class="sidebar-heading">
-                {{ __('Manage') }}
+                {{ __('Pengguna') }}
             </div>
 
             <!-- Nav Item - User -->
             <li class="nav-item {{ Nav::isRoute('user.*') }}">
                 <a class="nav-link" href="{{ route('user.index') }}">
                     <i class="fa-solid fa-users"></i>
-                    <span>{{ __('User') }}</span>
-                </a>
-            </li>
-
-            <!-- Nav Item - User -->
-            <li class="nav-item {{ Nav::isRoute('hero.*') }}">
-                <a class="nav-link" href="">
-                    <i class="fa-solid fa-image"></i>
-                    <span>{{ __('Hero') }}</span>
+                    <span>{{ __('Manajemen Pengguna') }}</span>
                 </a>
             </li>
             @endif

@@ -1,54 +1,54 @@
 @extends('layouts.admin')
 
 @section('main-content')
-<div class="container-fluid">
-    <div class="d-flex align-items-center">
-        <a href="{{ route('berita.berita') }}" class="text-dark h3 mr-3" aria-label="Close">&times;</a>
-        <span class="h3 text-gray-800">{{ __('Tambah Berita') }}</span>
+<div class="d-flex align-items-center">
+    <span class="h3 text-gray-800">{{ __('Tambah Berita') }}</span>
+</div>
+
+<!-- Form Berita -->
+<form action="{{ route('berita.store') }}" method="POST" enctype="multipart/form-data" class="bg-light py-2 rounded">
+    @csrf
+
+    <!-- Upload Gambar -->
+    <div class="form-group">
+        <label class="font-weight-bolder" for="image1">Upload Gambar</label>
+        <input type="file" class="form-control @error('image1') is-invalid @enderror" id="image1" name="image1">
+        @error('image1')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
     </div>
 
-    <!-- Form Berita -->
-    <form action="{{ route('berita.store') }}" method="POST" enctype="multipart/form-data"
-        class="bg-light px-4 py-2 rounded">
-        @csrf
+    <!-- Judul Berita -->
+    <div class="form-group">
+        <label class="font-weight-bolder" for="Judul">Judul Berita</label>
+        <input type="text" class="form-control @error('Judul') is-invalid @enderror" id="Judul" name="Judul"
+            value="{{ old('Judul') }}" required>
+        @error('Judul')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
-        <!-- Upload Gambar -->
-        <div class="form-group">
-            <label class="font-weight-bolder" for="image1">Upload Gambar</label>
-            <input type="file" class="form-control @error('image1') is-invalid @enderror" id="image1" name="image1">
-            @error('image1')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+    <!-- Isi Berita -->
+    <div class="form-group">
+        <label class="font-weight-bolder" for="Isi">Isi Berita</label>
+        <div class="shadow border rounded-lg">
+            <textarea class="form-control @error('Isi') is-invalid @enderror" id="Isi"
+                name="Isi">{{ old('Isi') }}</textarea>
         </div>
+        @error('Isi')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
-        <!-- Judul Berita -->
-        <div class="form-group">
-            <label class="font-weight-bolder" for="Judul">Judul Berita</label>
-            <input type="text" class="form-control @error('Judul') is-invalid @enderror" id="Judul" name="Judul"
-                value="{{ old('Judul') }}" required>
-            @error('Judul')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+    <!-- Author ID (Otomatis) -->
+    <input type="hidden" name="author_id" value="{{ Auth::id() }}">
 
-        <!-- Isi Berita -->
-        <div class="form-group">
-            <label class="font-weight-bolder" for="Isi">Isi Berita</label>
-            <div class="shadow border rounded-lg">
-                <textarea class="form-control @error('Isi') is-invalid @enderror" id="Isi"
-                    name="Isi">{{ old('Isi') }}</textarea>
-            </div>
-            @error('Isi')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+    <div class="d-flex justify-content-between mt-3">
+        <a href="{{ route('berita.berita') }}" class="btn btn-secondary">Cancel</a>
 
-        <!-- Author ID (Otomatis) -->
-        <input type="hidden" name="author_id" value="{{ Auth::id() }}">
-
-        <button type="submit" class="btn btn-primary mt-3">Tambah Berita</button>
-    </form>
-</div>
+        <button type="submit" class="btn btn-primary">Tambah Berita</button>
+    </div>
+</form>
 
 <!-- TinyMCE Integration -->
 <script src="https://cdn.tiny.cloud/1/rijrac2uxn06a1q296snq7j1fi420fd29r3lc1o12yzq6fwv/tinymce/7/tinymce.min.js"

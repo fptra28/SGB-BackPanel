@@ -11,9 +11,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class BeritaController extends Controller
 {
-
-    private $baseUrl;
-
     /**
      * Create a new controller instance.
      *
@@ -22,7 +19,6 @@ class BeritaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->baseUrl = config('app.url'); // Ambil dari .env
     }
 
     /**
@@ -80,7 +76,6 @@ class BeritaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'image1'    => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'Judul'     => 'required|string|max:100|unique:beritas,Judul',
@@ -89,13 +84,13 @@ class BeritaController extends Controller
         ]);
 
         try {
-            // Ambil nama asli file dan simpan ke dalam folder public/uploads/berita
+            // Menyimpan gambar ke folder public/images/berita
             $fileName = time() . '_' . $request->file('image1')->getClientOriginalName();
-            $request->file('image1')->storeAs('public/uploads', $fileName);
+            $request->file('image1')->move(public_path('images/berita'), $fileName);
 
-            // Simpan data ke database dengan hanya nama file
+            // Simpan ke database
             $berita = Berita::create([
-                'image1'    => $fileName, // Hanya menyimpan nama file
+                'image1'    => $fileName, // Simpan hanya nama file
                 'Judul'     => $request->Judul,
                 'Isi'       => $request->Isi,
                 'author_id' => $request->author_id,
@@ -133,7 +128,7 @@ class BeritaController extends Controller
      */
     public function edit($id)
     {
-        $response = Http::get("{$this->baseUrl}/api/berita/edit?id={$id}");
+        $response = Http::get("http://sgb-backpanel.test/api/berita/edit?id={$id}");
 
         if ($response->failed()) {
             abort(404, 'Berita tidak ditemukan');
@@ -149,7 +144,6 @@ class BeritaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi input
         $request->validate([
             'Judul'  => 'required|string|max:100',
             'Isi'    => 'required|string',
@@ -158,29 +152,28 @@ class BeritaController extends Controller
         ]);
 
         try {
-            // Ambil berita yang akan diupdate
             $berita = Berita::findOrFail($id);
 
-            // Simpan gambar jika ada yang diunggah
+            // Jika ada file baru diunggah
             if ($request->hasFile('image1')) {
                 // Hapus gambar lama jika ada
-                if ($berita->image1 && file_exists(storage_path('app/public/uploads/' . $berita->image1))) {
-                    unlink(storage_path('app/public/uploads/' . $berita->image1));
+                $oldImagePath = public_path('images/berita/' . $berita->image1);
+                if ($berita->image1 && file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
                 }
 
-                // Simpan gambar baru dengan hanya nama file
-                $fileName = time() . '_' . $request->file('image1')->getClientOriginalName();
-                $request->file('image1')->storeAs('public/uploads', $fileName);
-            } else {
-                $fileName = $berita->image1; // Gunakan gambar lama jika tidak diubah
+                // Simpan gambar baru
+                $imageName = time() . '_' . $request->file('image1')->getClientOriginalName();
+                $request->file('image1')->move(public_path('images/berita'), $imageName);
+                $berita->image1 = $imageName;
             }
 
-            // Update berita di database
+            // Update berita
             $berita->update([
                 'Judul'     => $request->Judul,
                 'Isi'       => $request->Isi,
                 'author_id' => $request->author_id,
-                'image1'    => $fileName, // Hanya menyimpan nama file
+                'image1'    => $berita->image1, // Gunakan gambar lama jika tidak ada upload baru
             ]);
 
             return redirect()->route('berita.berita')->with('success', 'Berita berhasil diperbarui!');
@@ -200,13 +193,11 @@ class BeritaController extends Controller
             return redirect()->route('berita.berita')->with('error', 'Berita tidak ditemukan.');
         }
 
-        // Cek apakah berita memiliki gambar
+        // Hapus gambar jika ada
         if ($berita->image1) {
-            $filePath = 'public/uploads/' . $berita->image1; // Sesuaikan dengan lokasi penyimpanan
-
-            // Hapus file jika ada di penyimpanan
-            if (Storage::exists($filePath)) {
-                Storage::delete($filePath);
+            $filePath = public_path('images/berita/' . $berita->image1);
+            if (file_exists($filePath)) {
+                unlink($filePath);
             }
         }
 

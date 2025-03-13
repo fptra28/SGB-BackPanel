@@ -14,7 +14,7 @@
         <div class="card-header">
             <h3 class="font-weight-bolder">{{ $berita['data']['Judul'] }}</h3>
         </div>
-        <img src="{{ asset('storage/uploads/' . $berita['data']['image1']) }}" class="card-img-top"
+        <img src="{{ asset('images/berita/' . $berita['data']['image1']) }}" class="card-img-top"
             alt="$berita['image1']" height="300" style="object-fit: cover">
         <div class="card-body">
             <div class="m-0 d-flex flex-column flex-lg-row">

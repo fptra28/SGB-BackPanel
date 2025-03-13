@@ -98,7 +98,7 @@ class VideoController extends Controller
     {
         // Validasi input
         $request->validate([
-            'title' => 'required|string|max:100|unique:video_links,title',
+            'title' => 'required|string|max:100',
             'video_links' => 'required|url',
         ]);
 

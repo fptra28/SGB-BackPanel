@@ -87,8 +87,8 @@
     @foreach ($beritas as $berita)
     <div class="col mb-3">
         <div class="card shadow h-100 d-flex flex-column">
-            <img src="{{ !empty($berita['image1']) ? asset('storage/uploads/' . $berita['image1']) : 'https://placehold.co/600x400' }}"
-                class="card-img-top" height="150" style="object-fit: cover;">
+            <img src="{{ asset('images/berita/' . $berita['image1']) }}" class="card-img-top" height="150"
+                style="object-fit: cover;">
 
             <div class="card-body d-flex flex-column h-100">
                 <h5 class="card-title font-weight-bold text-dark">

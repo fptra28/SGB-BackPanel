@@ -71,6 +71,22 @@ Route::get('/users/edit/{id}', 'UserController@edit')->name('user.edit')->middle
 
 Route::delete('/users/delete/{id}', 'UserController@destroy')->name('user.destroy')->middleware('role:superadmin');
 
+// Hero Banner Routes
+Route::get('/hero-banner', 'BannerController@index')->name('hero.index');
+
+
+Route::post('/hero-banner', 'BannerController@store')->name('hero.store');
+
+Route::get('/hero-banner/create', 'BannerController@create')->name('hero.create');
+
+Route::get('/hero-banner/{id}', 'BannerController@show')->name('hero.show');
+
+Route::put('/hero-banner/edit/put/{id}', 'BannerController@update')->name('hero.update');
+
+Route::get('/hero-banner/edit/{id}', 'BannerController@edit')->name('hero.edit');
+
+Route::delete('/hero-banner/delete/{id}', 'BannerController@destroy')->name('hero.destroy');
+
 // Routes Handling Errors
 Route::get('/404', 'HandlingController@Error404')->name('404');
 

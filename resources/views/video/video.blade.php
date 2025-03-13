@@ -114,7 +114,7 @@
                     <td class="align-middle text-center">
                         <input type="checkbox" name="delete_ids[]" value="{{ $video['id'] }}" class="delete-checkbox">
                     </td>
-                    <td class="align-middle">{{ Str::limit($video['title'] ?? 'Judul tidak tersedia', 100) }}</td>
+                    <td class="align-middle">{{ Str::limit($video['title'] ?? 'Judul tidak tersedia', 50) }}</td>
                     <td class="align-middle text-center">
                         {{ \Carbon\Carbon::parse($video['updated_at'])->translatedFormat('l, d F Y, H:i') }}
                     </td>

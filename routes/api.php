@@ -28,3 +28,6 @@ Route::get('/berita/detail', 'Api\BeritaController@showByTitle'); // Berdasarkan
 // Routes API Video
 Route::get('/video', 'Api\VideoController@index');
 Route::get('/video/edit', 'Api\VideoController@showById');
+
+// Routes API Banner
+Route::get('/banner', 'Api\BannerController@index');

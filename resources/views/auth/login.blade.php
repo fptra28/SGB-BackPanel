@@ -43,7 +43,7 @@
                                         <label for="password">Password:</label>
                                         <div class="input-group">
                                             <input type="password" class="form-control" id="password" name="password"
-                                                placeholder="{{ __('Password') }}" required>
+                                                placeholder="Password" required>
                                             <div class="input-group-append">
                                                 <button class="btn btn-outline-secondary" type="button"
                                                     id="togglePassword">
