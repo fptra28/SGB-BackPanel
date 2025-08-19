@@ -4,23 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\VideoLink;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
-
-    private $baseUrl;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
-        $this->baseUrl = config('app.url'); // Ambil dari .env
     }
 
     /**
@@ -28,20 +17,17 @@ class VideoController extends Controller
      */
     public function index(Request $request)
     {
-        // Ambil query pencarian dari input
         $search = $request->query('search');
 
-        // Query dengan search dan pagination
         $videos = VideoLink::when($search, function ($query, $search) {
             return $query->where('title', 'LIKE', "%{$search}%");
         })
             ->latest()
-            ->paginate(10) // Menampilkan 15 data per halaman
-            ->appends(['search' => $search]); // Agar pagination tetap menyimpan query search
+            ->paginate(10)
+            ->appends(['search' => $search]);
 
-        return view('video.video', compact('videos'));
+        return view('video.index', compact('videos'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -56,17 +42,28 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
-        $request->validate([
-            'title' => 'required|string|max:100|unique:video_links,title',
-            'video_links' => 'required|url',
+        $validated = $request->validate([
+            'title'      => 'required|string|max:100|unique:videos,title',
+            'embed_code' => 'required|string',
+            'image'      => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ]);
 
         try {
-            // Simpan ke database
+            $imagePath = null;
+
+            if ($request->hasFile('image')) {
+                $file     = $request->file('image');
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/videos'), $filename);
+
+                // Simpan path relatif (agar mudah dipanggil di view)
+                $imagePath = 'uploads/videos/' . $filename;
+            }
+
             VideoLink::create([
-                'title' => $request->title,
-                'video_links' => $request->video_links,
+                'title'      => $validated['title'],
+                'embed_code' => $validated['embed_code'],
+                'image'      => $imagePath,
             ]);
 
             return redirect()->route('video.index')->with('success', 'Video berhasil ditambahkan!');
@@ -80,14 +77,7 @@ class VideoController extends Controller
      */
     public function edit($id)
     {
-        $response = Http::get("{$this->baseUrl}/api/video/edit/?id={$id}");
-
-        if ($response->failed()) {
-            abort(404, 'Berita tidak ditemukan');
-        }
-
-        $video = $response->json('data'); // Ambil langsung bagian 'data'
-
+        $video = VideoLink::findOrFail($id);
         return view('video.edit', compact('video'));
     }
 
@@ -96,25 +86,38 @@ class VideoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi input
-        $request->validate([
-            'title' => 'required|string|max:100',
-            'video_links' => 'required|url',
+        $video = VideoLink::findOrFail($id);
+
+        $validated = $request->validate([
+            'title'      => 'required|string|max:100|unique:videos,title,' . $video->id,
+            'embed_code' => 'required|string',
+            'image'      => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
         ]);
 
         try {
-            // Ambil berita yang akan diupdate
-            $video = VideoLink::findOrFail($id);
+            $data = [
+                'title'      => $validated['title'],
+                'embed_code' => $validated['embed_code'],
+            ];
 
-            // Update berita di database
-            $video->update([
-                'title' => $request->title,
-                'video_links' => $request->video_links,
-            ]);
+            if ($request->hasFile('image')) {
+                // Hapus file lama jika ada
+                if ($video->image && file_exists(public_path($video->image))) {
+                    unlink(public_path($video->image));
+                }
+
+                $file     = $request->file('image');
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/videos'), $filename);
+
+                $data['image'] = 'uploads/videos/' . $filename;
+            }
+
+            $video->update($data);
 
             return redirect()->route('video.index')->with('success', 'Video berhasil diperbarui!');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal memperbarui berita! ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memperbarui video! ' . $e->getMessage());
         }
     }
 
@@ -129,21 +132,33 @@ class VideoController extends Controller
             return redirect()->route('video.index')->with('error', 'Video tidak ditemukan.');
         }
 
-        // Hapus data berita dari database
+        if ($video->image && file_exists(public_path($video->image))) {
+            unlink(public_path($video->image));
+        }
+
         $video->delete();
 
         return redirect()->route('video.index')->with('success', 'Video berhasil dihapus.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Bulk delete selected resources.
      */
     public function bulkDelete(Request $request)
     {
         $ids = $request->delete_ids;
 
-        if ($ids) {
+        if ($ids && is_array($ids)) {
+            $videos = VideoLink::whereIn('id', $ids)->get();
+
+            foreach ($videos as $video) {
+                if ($video->image && file_exists(public_path($video->image))) {
+                    unlink(public_path($video->image));
+                }
+            }
+
             VideoLink::whereIn('id', $ids)->delete();
+
             return redirect()->route('video.index')->with('success', 'Data video berhasil dihapus.');
         }
 

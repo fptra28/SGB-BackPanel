@@ -11,7 +11,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>SGB Backpanel</title>
+    <title>@yield('title') - SGB Backpanel</title>
 
     <!-- Fonts -->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
@@ -66,10 +66,10 @@
             </div>
 
             <!-- Nav Item - News -->
-            <li class="nav-item {{ Nav::isRoute('berita.*') }}">
-                <a class="nav-link" href="{{ route('berita.berita') }}">
-                    <i class="fa-solid fa-newspaper"></i>
-                    <span>{{ __('Berita') }}</span>
+            <li class="nav-item {{ Nav::isRoute('produk.*') }}">
+                <a class="nav-link" href="{{ route('produk.index') }}">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>{{ __('Produk') }}</span>
                 </a>
             </li>
 
@@ -82,35 +82,60 @@
             </li>
 
             <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+            <hr class="sidebar-divider">
 
+            <!-- Heading -->
             <div class="sidebar-heading">
-                {{ __('Manajemen Website') }}
+                {{ __('Website') }}
             </div>
 
-            <!-- Nav Item - Hero -->
-            <li class="nav-item {{ Nav::isRoute('hero.*') }}">
-                <a class="nav-link" href="{{ route('hero.index') }}">
-                    <i class="fa-solid fa-image"></i>
-                    <span>{{ __('Hero') }}</span>
+            <!-- Nav Item - Settings -->
+            <li class="nav-item {{ Nav::isRoute('settings.*') }}">
+                <a class="nav-link" href="{{ route('settings.index') }}">
+                    <i class="fa-solid fa-gears"></i>
+                    <span>{{ __('Settings') }}</span>
                 </a>
             </li>
 
-            @if(auth()->user()->role == 'superadmin')
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-
-            <div class="sidebar-heading">
-                {{ __('Pengguna') }}
-            </div>
-
-            <!-- Nav Item - User -->
-            <li class="nav-item {{ Nav::isRoute('user.*') }}">
-                <a class="nav-link" href="{{ route('user.index') }}">
-                    <i class="fa-solid fa-users"></i>
-                    <span>{{ __('Manajemen Pengguna') }}</span>
+            <!-- Nav Item - Settings -->
+            <li class="nav-item {{ Nav::isRoute('legalitas.*') }}">
+                <a class="nav-link" href="{{ route('legalitas.index') }}">
+                    <i class="fa-solid fa-file-contract"></i>
+                    <span>{{ __('Legalitas') }}</span>
                 </a>
             </li>
+
+            <!-- Nav Item - Kantor Cabang -->
+            <li class="nav-item {{ Nav::isRoute('kantor-cabang.*') }}">
+                <a class="nav-link" href="{{ route('kantor-cabang.index') }}">
+                    <i class="fa-solid fa-building"></i>
+                    <span>{{ __('Kantor Cabang') }}</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Wakil Pialang -->
+            <li class="nav-item {{ Nav::isRoute('wakil-pialang.*') }}">
+                <a class="nav-link" href="{{ route('wakil-pialang.index') }}">
+                    <i class="fa-solid fa-people-group"></i>
+                    <span>{{ __('Wakil Pialang') }}</span>
+                </a>
+            </li>
+
+            @if (auth()->user()->role == 'superadmin')
+                <!-- Divider -->
+                <hr class="sidebar-divider d-none d-md-block">
+
+                <div class="sidebar-heading">
+                    {{ __('Pengguna') }}
+                </div>
+
+                <!-- Nav Item - User -->
+                <li class="nav-item {{ Nav::isRoute('user.*') }}">
+                    <a class="nav-link" href="{{ route('user.index') }}">
+                        <i class="fa-solid fa-users"></i>
+                        <span>{{ __('Manajemen Pengguna') }}</span>
+                    </a>
+                </li>
             @endif
 
             <!-- Divider -->
@@ -146,8 +171,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 text-gray-600 small">{{ Auth::user()->name
-                                    }}</span>
+                                <span class="mr-2 text-gray-600 small">{{ Auth::user()->name }}</span>
                                 <figure class="img-profile rounded-circle avatar font-weight-bold"
                                     data-initial="{{ Auth::user()->name[0] }}"></figure>
                             </a>
@@ -160,8 +184,8 @@
                                 </a>
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item text-danger font-weight-bold" data-toggle="modal"
-                                    data-target="#logoutModal">
+                                <a href="#" class="dropdown-item text-danger font-weight-bold"
+                                    data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2"></i>
                                     {{ __('Logout') }}
                                 </a>
@@ -188,8 +212,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Maintained by SG Berjangka. &copy;{{
-                            now()->year }}</span>
+                        <span>Maintained by SG Berjangka. &copy;{{ now()->year }}</span>
                     </div>
                 </div>
             </footer>
@@ -220,8 +243,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-link" type="button" data-dismiss="modal">{{ __('Cancel') }}</button>
                     <a class="btn btn-danger" href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{
-                        __('Logout') }}</a>
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
@@ -235,6 +257,8 @@
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+
+    @yield('scripts')
 </body>
 
 </html>

@@ -9,10 +9,11 @@ class VideoLink extends Model
 {
     use HasFactory;
 
-    protected $table = 'video_links'; // Nama tabel di database
+    protected $table = 'videos'; // Nama tabel di database
 
     protected $fillable = [
         'title',
-        'video_links',
+        'image',
+        'embed_code',
     ];
 }

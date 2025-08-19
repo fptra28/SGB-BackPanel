@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('video_links', function (Blueprint $table) {
+        Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->string('title', 100);
-            $table->text('video_links');
+            $table->text('image');
+            $table->text('embed_code');
             $table->timestamps();
         });
     }

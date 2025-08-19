@@ -2,32 +2,53 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+
+// Import controller API (ubah namespace sesuai struktur kamu)
+use App\Http\Controllers\Api\BeritaController;
+use App\Http\Controllers\Api\VideoController;
+use App\Http\Controllers\Api\BannerController;
+use App\Http\Controllers\Api\KantorCabangController;
+use App\Http\Controllers\Api\LegalitasController;
+use App\Http\Controllers\Api\ProdukController;
+use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\Api\WakilPialangController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
 */
 
+// Contoh endpoint user jika pakai Sanctum
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
 
-// Routes API Berita
-Route::get('/berita', 'Api\BeritaController@index'); // Semua berita
-Route::get('/berita/edit', 'Api\BeritaController@showById'); // Berdasarkan ID
-Route::get('/berita/detail', 'Api\BeritaController@showByTitle'); // Berdasarkan Judul
+Route::prefix('v1')->group(function () {
 
-// Routes API Video
-Route::get('/video', 'Api\VideoController@index');
-Route::get('/video/edit', 'Api\VideoController@showById');
+    // ===== Berita =====
+    Route::get('/berita',           [BeritaController::class, 'index']);              // semua berita
+    Route::get('/berita/{id}',      [BeritaController::class, 'showById']);           // by id, ex: /v1/berita/123
+    Route::get('/berita/judul/{q}', [BeritaController::class, 'showByTitle']);        // by title/slug, ex: /v1/berita/judul/investasi-aman
 
-// Routes API Banner
-Route::get('/banner', 'Api\BannerController@index');
+    // ===== Video =====
+    Route::get('/video',            [VideoController::class, 'index']);
+
+    // ===== Banner =====
+    Route::get('/banner',           [BannerController::class, 'index']);
+
+    // ===== Produk =====
+    Route::get('/produk',           [ProdukController::class, 'index']);
+
+    // ===== Setting =====
+    Route::get('/setting',          [SettingController::class, 'index']);
+
+    // ===== Legalitas =====
+    Route::get('/legalitas',    [LegalitasController::class, 'index']);
+
+    // ===== Wakil Pialang =====
+    Route::get('/wakil-pialang',    [WakilPialangController::class, 'index']);
+
+    // ===== kantor Cabang =====
+    Route::get('/kantor-cabang',    [KantorCabangController::class, 'index']);
+});

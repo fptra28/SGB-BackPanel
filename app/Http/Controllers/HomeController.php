@@ -27,12 +27,10 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::count();
-        $berita = Berita::count();
         $videos = VideoLink::count();
 
         $widget = [
             'users' => $users,
-            'berita' => $berita,
             'videos' => $videos
         ];
 
